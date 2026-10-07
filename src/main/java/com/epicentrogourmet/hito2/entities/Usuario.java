@@ -1,32 +1,28 @@
-package com.unla.hito2.entities;
+package com.epicentrogourmet.hito2.entities;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "item_pedido")
 @Getter @Setter @NoArgsConstructor
-public class ItemPedido {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idItemPedido;
+    private long idUsuario;
 
-    private int cantidad;
-    private double precioUnitario;
-
-    @ManyToOne
-    @JoinColumn(name = "id_pedido")
-    private Pedido pedido;
+    private String username;
+    private String password;
+    private boolean activo;
 
     @ManyToOne
-    @JoinColumn(name = "id_plato")
-    private Plato plato;
+    @JoinColumn(name = "id_rol") 
+    private Rol rol;
 }

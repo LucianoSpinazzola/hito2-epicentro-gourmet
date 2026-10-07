@@ -1,4 +1,4 @@
-package com.unla.hito2.entities;
+package com.epicentrogourmet.hito2.entities;
 
 import java.util.Set;
 import jakarta.persistence.Entity;

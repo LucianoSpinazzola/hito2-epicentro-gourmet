@@ -1,4 +1,4 @@
-package com.unla.hito2.entities;
+package com.epicentrogourmet.hito2.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
