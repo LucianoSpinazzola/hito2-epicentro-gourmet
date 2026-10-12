@@ -1,4 +1,4 @@
-package com.epicentrogourmet.hito2.entities;
+package com.epicentrogourmet.hito2.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +17,7 @@ public class ItemPedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idItemPedido;
+    private Long idItemPedido;
 
     private int cantidad;
     private double precioUnitario;

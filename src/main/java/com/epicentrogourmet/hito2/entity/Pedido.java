@@ -1,4 +1,4 @@
-package com.epicentrogourmet.hito2.entities;
+package com.epicentrogourmet.hito2.entity;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -23,7 +23,7 @@ public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idPedido;
+    private Long idPedido;
 
     private LocalDate fecha;
     private double total;
@@ -31,7 +31,7 @@ public class Pedido {
 
     @ManyToOne
     @JoinColumn(name = "id_unidad_venta")
-    private UnidadVenta unidadVenta;
+    private UnidadDeVenta unidadVenta;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ItemPedido> items; 

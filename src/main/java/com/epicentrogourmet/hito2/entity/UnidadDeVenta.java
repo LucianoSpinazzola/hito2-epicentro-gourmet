@@ -37,5 +37,11 @@ public abstract class UnidadDeVenta {
 	@ManyToOne
 	@JoinColumn(name = "id_festival", nullable = false)
 	private Festival festival;
-
+	@ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "unidad_venta_plato",
+        joinColumns = @JoinColumn(name = "id_unidad_venta"),
+        inverseJoinColumns = @JoinColumn(name = "id_plato")
+    )
+    private java.util.Set<Plato> platos; 
 }

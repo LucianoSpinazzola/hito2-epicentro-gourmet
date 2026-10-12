@@ -1,4 +1,4 @@
-package com.epicentrogourmet.hito2.entities;
+package com.epicentrogourmet.hito2.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +18,7 @@ public class Costo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idCosto;
+    private Long idCosto;
 
     private double sueldoBase;           
     private double costoSuperficie;      
