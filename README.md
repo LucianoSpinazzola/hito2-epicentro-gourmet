@@ -59,8 +59,7 @@ La aplicación estará disponible en http://localhost:8080
 
 | Caso de Uso | Responsable | Pull Request |
 | --- | --- | --- |
-| [COMPLETAR] | pablo vazquez | <img width="1366" height="720" alt="image" src="https://github.com/user-attachments/assets/452d2972-a046-4ed3-b5fa-fc72bf130ef7" />
- |
+| [COMPLETAR] | pablo vazquez |
 
 ### Metodología de Trabajo
 
