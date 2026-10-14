@@ -52,8 +52,8 @@ mvn spring-boot:run
 La aplicación estará disponible en http://localhost:8080
 
 ### Diagrama de Clases
+https://drive.google.com/file/d/186UyoMGrEUDujmmbJauR2BH1_pfwHJim/view?usp=sharing
 
-[COMPLETAR - Link al diagrama de clases una vez validado]
 
 ### Casos de Uso Implementados
 
