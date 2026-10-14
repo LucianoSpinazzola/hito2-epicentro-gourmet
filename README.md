@@ -59,7 +59,7 @@ La aplicación estará disponible en http://localhost:8080
 
 | Caso de Uso | Responsable | Pull Request |
 | --- | --- | --- |
-| [COMPLETAR] | pablo vazquez |
+| [COMPLETAR] | pablo vazquez |https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/3
 
 ### Metodología de Trabajo
 
