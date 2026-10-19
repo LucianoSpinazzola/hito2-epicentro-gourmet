@@ -62,18 +62,18 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
     }
 
     @Autowired
-    private CostoRepository costoRepository; // Inyectamos el repo de costos también acá
+    private CostoRepository costoRepository; 
 
     @Override
     public double calcularSueldoTotal(Long idEmpleado, int diasDuracionFestival, Long idFestival) {
         Empleado empleado = empleadoRepository.findById(idEmpleado)
                 .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
         
-        // Buscamos los costos configurados para el festival en el que trabajó
+       
         Costo costosFestival = costoRepository.findByFestivalIdFestival(idFestival)
                 .orElseThrow(() -> new RuntimeException("No se encontraron costos configurados para este festival"));
         
-        // REGLA DEL ENUNCIADO: El sueldo base se toma dinámicamente de la entidad Costo
+        
         double sueldoBase = costosFestival.getSueldoBase(); 
         
         if (empleado instanceof Cocinero) {
@@ -85,7 +85,7 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
         
         if (empleado instanceof Cajero) {
             long anosAntiguedad = ChronoUnit.YEARS.between(empleado.getFechaIngreso(), LocalDate.now());
-            // REGLA DEL ENUNCIADO: El valor por año de antigüedad se toma del objeto Costo (valorAntiguedad)
+           
             double montoAntiguedad = anosAntiguedad * costosFestival.getValorAntiguedad();
             
             int factorIntervalos = (diasDuracionFestival / 15) + 1;

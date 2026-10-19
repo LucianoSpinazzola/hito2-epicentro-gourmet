@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epicentro Gourmet - Iniciar Sesión</title>
+    <style>
+        /* Variables de colores para el manejo de Modo Claro / Oscuro */
+        :root {
+            --bg-principal: #f4f6f9;
+            --bg-tarjeta: #ffffff;
+            --texto-principal: #333333;
+            --texto-secundario: #666666;
+            --borde: #cccccc;
+            --primario: #007bff;
+            --primario-hover: #0056b3;
+            --error-bg: #f8d7da;
+            --error-texto: #721c24;
+            --logout-bg: #d4edda;
+            --logout-texto: #155724;
+        }
+
+        [data-theme="dark"] {
+            --bg-principal: #121212;
+            --bg-tarjeta: #1e1e1e;
+            --texto-principal: #e0e0e0;
+            --texto-secundario: #a0a0a0;
+            --borde: #444444;
+            --primario: #3792ff;
+            --primario-hover: #1e70d6;
+            --error-bg: #2c0b0e;
+            --error-texto: #f8b4b9;
+            --logout-bg: #0f2d19;
+            --logout-texto: #b4f8c6;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .login-container {
+            background-color: var(--bg-tarjeta);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--borde);
+        }
+
+        .header-login {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .btn-accesibilidad {
+            background-color: var(--borde);
+            color: var(--texto-principal);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--borde);
+            border-radius: 4px;
+            background-color: var(--bg-tarjeta);
+            color: var(--texto-principal);
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: 2px solid var(--primario);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primario);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primario-hover);
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .alert-danger { background-color: var(--error-bg); color: var(--error-texto); }
+        .alert-success { background-color: var(--logout-bg); color: var(--logout-texto); }
+
+        /* Elemento oculto visualmente pero disponible para lectores de pantalla */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- main indica la región principal del documento (clave para lectores de pantalla) -->
+    <main class="login-container" role="main">
+        
+        <header class="header-login">
+            <h1>Iniciar Sesión</h1>
+            <!-- Botón con aria-label para que el lector describa qué hace exactamente -->
+            <button id="theme-toggle" class="btn-accesibilidad" aria-label="Cambiar entre modo claro y modo oscuro">
+                🌓 Modo
+            </button>
+        </header>
+
+        <!-- Mensajes de Alerta con role="alert" para que el lector los anuncie inmediatamente al aparecer -->
+		<div th:if="${mensajeError}" class="alert alert-danger" role="alert" th:text="${mensajeError}"></div>
+		<div th:if="${mensajeLogout}" class="alert alert-success" role="alert" th:text="${mensajeLogout}"></div>
+        <!-- Formulario con las rutas mapped de tu LoginController -->
+        <form th:action="@{/login}" method="post" aria-label="Formulario de ingreso al sistema">
+            
+            <div class="form-group">
+                <!-- El atributo 'for' vincula la etiqueta al input para mejorar la navegación del lector -->
+                <label for="username">Correo Electrónico:</label>
+                <input type="email" id="username" name="username" 
+                       placeholder="ejemplo@epicentro.com" required 
+                       aria-required="true" autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" 
+                       placeholder="Ingrese su clave" required 
+                       aria-required="true" autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn-submit">Ingresar al Sistema</button>
+        </form>
+
+    </main>
+
+    <!-- Script encargado de conmutar y persistir el modo oscuro usando LocalStorage -->
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+
+        // Aplicamos el tema guardado al cargar la página
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = (theme === 'dark') ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Avisar textualmente al lector de pantalla sobre el cambio de estado
+            themeToggle.setAttribute('aria-label', `Cambiar tema. Tema actual: ${newTheme}`);
+        });
+    </script>
+</body>
+</html>

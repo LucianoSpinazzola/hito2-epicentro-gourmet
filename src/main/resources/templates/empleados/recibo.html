@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Recibo de Haberes</title>
+    <style>
+        :root {
+            --bg-principal: #f4f6f9;
+            --bg-tarjeta: #ffffff;
+            --texto-principal: #333333;
+            --borde: #cccccc;
+            --primario: #007bff;
+            --primario-hover: #0056b3;
+            --exito: #28a745;
+            --exito-hover: #218838;
+        }
+
+        [data-theme="dark"] {
+            --bg-principal: #121212;
+            --bg-tarjeta: #1e1e1e;
+            --texto-principal: #e0e0e0;
+            --borde: #444444;
+            --primario: #3792ff;
+            --primario-hover: #1e70d6;
+            --exito: #2ea44f;
+            --exito-hover: #227d3c;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .recibo-container {
+            background-color: var(--bg-tarjeta);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--borde);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 550px;
+        }
+
+        .header-recibo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primario);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .info-group {
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: var(--primario);
+        }
+
+        .monto-panel {
+            background-color: var(--bg-principal);
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border: 1px solid var(--borde);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .btn-pdf {
+            display: block;
+            text-align: center;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--exito);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 20px;
+            box-sizing: border-box;
+        }
+
+        .btn-pdf:hover {
+            background-color: var(--exito-hover);
+        }
+
+        .btn-volver {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--texto-principal);
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="recibo-container" role="main" aria-labelledby="recibo-title">
+        
+        <header class="header-recibo">
+            <h1 id="recibo-title" th:text="${titulo}">Recibo de Haberes</h1>
+            <button id="theme-toggle" style="background: none; border: none; cursor: pointer; font-size: 18px;" aria-label="Cambiar contraste">🌓</button>
+        </header>
+
+        <!-- Datos Dinámicos provistos por el EmpleadoController -->
+        <div class="info-group">
+            <span class="info-label">ID Empleado:</span>
+            <span th:text="${empleado.idEmpleado}">0</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Usuario:</span>
+            <span th:text="${session.usuarioLogueado.userName}">Usuario</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Rol del Puesto:</span>
+            <span th:text="${session.usuarioLogueado.rol.nombreRol}">Rol</span>
+        </div>
+
+        <!-- Panel del Sueldo Neto Liquidado en Java -->
+        <div class="monto-panel">
+            <span>SUELDO NETO A COBRAR:</span>
+            <span style="color: var(--exito);" th:text="'$' + ${#numbers.formatDecimal(sueldoCalculado, 1, 2)}">$0.00</span>
+        </div>
+
+        <!-- GATILLO DEL PDF: Apunta al método descargarReciboPdf del controlador -->
+        		<a href="/empleados/descargar-sueldo" class="btn-pdf">📄 Descargar Recibo Oficial en PDF</a>
+        
+        <a th:href="@{/home}" class="btn-volver">Volver al Panel</a>
+
+    </main>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = (theme === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

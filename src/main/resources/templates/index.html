@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Epicentro Gourmet - Panel</title>
+    <style>
+        /* Sincronización de variables de colores con la pantalla de Login */
+        :root {
+            --bg-principal: #f4f6f9;
+            --bg-tarjeta: #ffffff;
+            --texto-principal: #333333;
+            --texto-secundario: #666666;
+            --borde: #cccccc;
+            --primario: #007bff;
+            --primario-hover: #0056b3;
+            --danger: #dc3545;
+            --danger-hover: #bd2130;
+            --exito-bg: #d4edda;
+            --exito-texto: #155724;
+        }
+
+        [data-theme="dark"] {
+            --bg-principal: #121212;
+            --bg-tarjeta: #1e1e1e;
+            --texto-principal: #e0e0e0;
+            --texto-secundario: #a0a0a0;
+            --borde: #444444;
+            --primario: #3792ff;
+            --primario-hover: #1e70d6;
+            --danger: #ff6b7b;
+            --danger-hover: #e04353;
+            --exito-bg: #0f2d19;
+            --exito-texto: #b4f8c6;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-tarjeta);
+            padding: 15px 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid var(--borde);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .navbar-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-accesibilidad {
+            background-color: var(--borde);
+            color: var(--texto-principal);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-logout {
+            background-color: var(--danger);
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn-logout:hover {
+            background-color: var(--danger-hover);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: var(--bg-tarjeta);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--borde);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .btn-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: var(--primario);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .btn-link:hover {
+            background-color: var(--primario-hover);
+        }
+
+        h1, h2 {
+            margin-top: 0;
+        }
+
+        .welcome-text {
+            color: var(--texto-secundario);
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            background-color: var(--exito-bg);
+            color: var(--exito-texto);
+            border: 1px solid var(--borde);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" role="navigation" aria-label="Barra de navegación principal">
+        <div>
+            <!-- Cambiado a session para enganchar con tu controlador del login de Sofia -->
+            <span style="font-weight: bold; font-size: 18px;" 
+                  th:text="'Operador: ' + ${session.usuarioLogueado.userName}">Usuario</span>
+        </div>
+        
+        <div class="navbar-actions">
+            <button id="theme-toggle" class="btn-accesibilidad" aria-label="Cambiar entre modo claro y modo oscuro">
+                🌓 Modo
+            </button>
+            <a th:href="@{/logout}" class="btn-logout" aria-label="Cerrar sesión segura del sistema">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <main role="main">
+        <h1 th:text="${titulo}">Epicentro Gourmet</h1>
+        <p class="welcome-text" th:text="${mensajeBienvenida}">¡Bienvenido al sistema!</p>
+
+        <div th:if="${param.pedidoExito}" class="alert" role="alert">
+            ¡El pedido ha sido registrado e impactado en la base de datos con éxito!
+        </div>
+
+        <div class="dashboard-grid">
+            
+            <!-- TARJETA 1: REGISTRO DE OPERACIONES -->
+            <section class="card" aria-labelledby="title-ventas">
+                <h2 id="title-ventas">📊 Registro de Operaciones</h2>
+                <p>Módulo para el Alta de Pedidos en caliente y desglose de ítems de comandas comerciales.</p>
+                <a th:if="${session.usuarioLogueado.rol.nombreRol != 'RESPONSABLE_UNIDAD'}"
+                   th:href="@{/pedidos/nuevo}" class="btn-link" aria-label="Ir al formulario para registrar un nuevo pedido">Nuevo Pedido</a>
+                <span th:if="${session.usuarioLogueado.rol.nombreRol == 'RESPONSABLE_UNIDAD'}" 
+                      style="color: var(--danger); font-size: 13px; display: block; margin-top: 15px; font-weight: bold;">⚠️ Operación restringida para tu rol.</span>
+            </section>
+
+            <!-- TARJETA 2: RECIBO DE HABERES DIGITAL -->
+            <section class="card" aria-labelledby="title-sueldos" style="border-left: 4px solid #28a745;">
+                <h2 id="title-sueldos">💵 Recibo de Haberes</h2>
+                <p>Visualización de la liquidación de jornadas laborables del festival y descarga de comprobante oficial en PDF.</p>
+                <a th:href="@{/empleados/mi-sueldo}" class="btn-link" style="background-color: #28a745;" aria-label="Ir a ver mi recibo de sueldo digital">Ver Mi Recibo</a>
+            </section>
+
+            <!-- TARJETA 3: REPORTES GERENCIALES (Ocultamiento Dinámico Puro) -->
+            <section class="card" th:if="${session.usuarioLogueado.rol.nombreRol == 'ADMINISTRADOR'}" aria-labelledby="title-reportes">
+                <h2 id="title-reportes">📈 Reportes Gerenciales</h2>
+                <p>Visualización paramétrica de cánones, cálculo de rentabilidad neta consolidada y plato estrella por festival.</p>
+                <a th:href="@{/reportes}" class="btn-link" aria-label="Ingresar al panel de control gerencial corporativo">Ingresar Reportes</a>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = (theme === 'dark') ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.setAttribute('aria-label', `Cambiar tema. Tema actual: ${newTheme}`);
+        });
+    </script>
+</body>
+</html>
