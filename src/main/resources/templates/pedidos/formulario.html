@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epicentro Gourmet - Comanda Profesional</title>
+    <style>
+        :root {
+            --bg-principal: #f4f6f9;
+            --bg-tarjeta: #ffffff;
+            --texto-principal: #333333;
+            --texto-secundario: #666666;
+            --borde: #cccccc;
+            --primario: #007bff;
+            --primario-hover: #0056b3;
+            --danger: #dc3545;
+            --exito: #28a745;
+        }
+
+        [data-theme="dark"] {
+            --bg-principal: #121212;
+            --bg-tarjeta: #1e1e1e;
+            --texto-principal: #e0e0e0;
+            --texto-secundario: #a0a0a0;
+            --borde: #444444;
+            --primario: #3792ff;
+            --primario-hover: #1e70d6;
+            --exito: #2ea44f;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .form-container {
+            background-color: var(--bg-tarjeta);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--borde);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .header-form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primario);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select, .input-search {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--borde);
+            border-radius: 4px;
+            background-color: var(--bg-tarjeta);
+            color: var(--texto-principal);
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .input-search {
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primario);
+        }
+
+        .table-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--borde);
+            border-radius: 4px;
+        }
+
+        .menu-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .menu-table th {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-principal);
+            padding: 12px;
+            z-index: 10;
+        }
+
+        .menu-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        .input-cantidad {
+            width: 70px;
+            padding: 6px;
+            border: 1px solid var(--borde);
+            border-radius: 4px;
+            background-color: var(--bg-tarjeta);
+            color: var(--texto-principal);
+            text-align: center;
+        }
+
+        .panel-total {
+            background-color: var(--bg-principal);
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            border: 1px solid var(--borde);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primario);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primario-hover);
+        }
+
+        .btn-volver {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--texto-principal);
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="form-container" role="main">
+        <header class="header-form">
+            <h1>Registrar Nuevo Pedido</h1>
+            <button id="theme-toggle" style="background: none; border: none; cursor: pointer; font-size: 18px;">🌓</button>
+        </header>
+
+        <form th:action="@{/pedidos/guardar}" th:object="${pedidoForm}" method="post">
+            <div class="form-group">
+                <label for="idUnidadVenta">Puesto Comercial Emisor:</label>
+                <select id="idUnidadVenta" th:field="*{idUnidadVenta}" required>
+                    <option value="" disabled selected>-- Seleccione el puesto --</option>
+                    <option th:each="unidad : ${unidadesVenta}" 
+                            th:value="${unidad.idUnidadDeVenta}" 
+                            th:text="${unidad.nombreComercial}"></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="buscador">Filtrar Menú Rápido:</label>
+                <input type="text" id="buscador" class="input-search" placeholder="🔍 Escriba para buscar un plato...">
+                
+                <div class="table-container">
+                    <table class="menu-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th style="text-align: center;">Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-productos">
+                            <tr th:each="item, stat : *{items}" class="item-fila">
+                                <td class="item-nombre" th:text="${item.nombrePlato}">Nombre</td>
+                                <td>$<span class="item-precio" th:text="${item.precioVenta}">0.0</span></td>
+                                <td style="text-align: center;">
+                                    <input type="hidden" th:field="*{items[__${stat.index}__].idPlato}" />
+                                    <input type="hidden" th:field="*{items[__${stat.index}__].nombrePlato}" />
+                                    <input type="hidden" th:field="*{items[__${stat.index}__].precioVenta}" />
+                                    <input type="number" th:field="*{items[__${stat.index}__].cantidad}" 
+                                           class="input-cantidad" min="0" max="20" required />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-total">
+                <span>TOTAL COMANDA:</span>
+                <span style="color: var(--exito);" id="total-comanda">$0.00</span>
+            </div>
+
+            <button type="submit" class="btn-submit">Confirmar e Impactar Comanda</button>
+            <a th:href="@{/home}" class="btn-volver">Cancelar y Volver</a>
+        </form>
+    </main>
+
+    <script>
+        document.getElementById('buscador').addEventListener('input', function(e) {
+            const texto = e.target.value.toLowerCase();
+            document.querySelectorAll('.item-fila').forEach(fila => {
+                const nombre = fila.querySelector('.item-nombre').textContent.toLowerCase();
+                fila.style.display = nombre.includes(texto) ? "" : "none";
+            });
+        });
+
+        document.querySelectorAll('.input-cantidad').forEach(input => {
+            input.addEventListener('input', function() {
+                let total = 0;
+                document.querySelectorAll('.item-fila').forEach(fila => {
+                    const precio = parseFloat(fila.querySelector('.item-precio').textContent) || 0;
+                    const cantidad = parseInt(fila.querySelector('.input-cantidad').value) || 0;
+                    total += (precio * cantidad);
+                });
+                document.getElementById('total-comanda').textContent = '$' + total.toFixed(2);
+            });
+        });
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = (theme === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

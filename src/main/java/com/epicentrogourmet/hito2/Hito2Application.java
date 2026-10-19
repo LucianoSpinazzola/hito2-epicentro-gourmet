@@ -1,14 +1,21 @@
 package com.epicentrogourmet.hito2;
 
+import org.modelmapper.ModelMapper; 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan; // <-- FIJATE SI TE PONE ESTE IMPORT SOLO, SINO AGREGALO
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.epicentrogourmet.hito2"}) // <-- ESTO OBLIGA A BUSCAR EN TODO EL PROYECTO
+@ComponentScan(basePackages = {"com.epicentrogourmet.hito2*"})
 public class Hito2Application {
 
-    public static void main(String[] eloquence) {
-        SpringApplication.run(Hito2Application.class, eloquence);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Hito2Application.class, args);
+	}
+
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
 }

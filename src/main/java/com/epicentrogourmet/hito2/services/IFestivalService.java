@@ -6,4 +6,5 @@ public interface IFestivalService {
     
     
     ReporteVentaDTO obtenerReporteRecaudacion(Long idFestival);
+    int calcularDuracionEnDias(Long idFestival);
 }

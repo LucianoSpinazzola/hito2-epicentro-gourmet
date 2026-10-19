@@ -44,4 +44,18 @@ public class FestivalServiceImpl implements IFestivalService {
                 recaudacionTotal
         );
     }
+    @Override
+    public int calcularDuracionEnDias(Long idFestival) {
+        // 1. Buscamos el festival en MySQL por su ID
+        com.epicentrogourmet.hito2.entity.Festival festival = festivalRepository.findById(idFestival)
+                .orElseThrow(() -> new RuntimeException("Festival no encontrado para calcular duración"));
+        
+        // 2. Calculamos los días reales entre el inicio y el fin usando las fechas del objeto
+        long dias = java.time.temporal.ChronoUnit.DAYS.between(
+                festival.getFechaDeInicio(), 
+                festival.getFechaDeFin()
+        ) + 1; // Sumamos 1 para incluir el último día completo del festival
+        
+        return (int) dias;
+    }
 }
