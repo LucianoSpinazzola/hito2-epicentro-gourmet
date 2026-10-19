@@ -56,10 +56,14 @@ https://drive.google.com/file/d/186UyoMGrEUDujmmbJauR2BH1_pfwHJim/view?usp=shari
 
 
 ### Casos de Uso Implementados
+https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/5
+pablo vazquez vistas controller y dtos
+https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/3
+pablo vazquez entidades con herencia, repositorios servicios e implementaciones
+| [COMPLETAR] |  |
 
 | Caso de Uso | Responsable | Pull Request |
 | --- | --- | --- |
-| [COMPLETAR] | pablo vazquez |https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/3
 
 ### Metodología de Trabajo
 
