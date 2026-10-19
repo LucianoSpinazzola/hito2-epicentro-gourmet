@@ -60,6 +60,8 @@ https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/5
 pablo vazquez vistas controller y dtos
 https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/3
 pablo vazquez entidades con herencia, repositorios servicios e implementaciones
+https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/4
+luciano spinazzola modificacion propertys, y entidades sin herencia
 | [COMPLETAR] |  |
 
 | Caso de Uso | Responsable | Pull Request |
