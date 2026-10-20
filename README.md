@@ -6,8 +6,8 @@ Trabajo Práctico Grupal 2026 - OO2 - UNLa
 
 ### Integrantes
 
-* Luciano Nicolás Spinazzola - [LucianoSpinazzola]
-* vazquez, pablo - [pablo-vaz1]
+* Luciano Nicolás Spinazzola - [LucianoSpinazzola](https://github.com/LucianoSpinazzola)
+* Vazquez, Pablo - [pablo-vaz1](https://github.com/pablo-vaz1)
 * Apellido, Nombre - [COMPLETAR USUARIO GITHUB]
 * Apellido, Nombre - [COMPLETAR USUARIO GITHUB]
 
@@ -30,7 +30,7 @@ Sistema de gestión para el centro de convenciones y predio ferial "Epicentro Go
 ### Pasos para correr la aplicación
 
 1. Clonar el repositorio:
-git clone [COMPLETAR - URL DEL REPO]
+git clone https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet.git
 cd hito2
 
 2. Crear la base de datos:
@@ -49,23 +49,32 @@ https://drive.google.com/file/d/1wFeW7VihpRrffXicauYCTaBLsHWS5vM_/view?usp=shari
 5. Ejecutar la aplicación:
 Desde el IDE (STS) mediante Run As > Spring Boot App, o vía terminal con:
 mvn spring-boot:run
-La aplicación estará disponible en http://localhost:8080
+La aplicación estará disponible en http://localhost:8089
+
+### Accesibilidad
+
+La interfaz está desarrollada con criterios de accesibilidad para personas con discapacidad visual, compatible con lectores de pantalla como NVDA, JAWS y Narrador. Los ejemplos de anuncios corresponden a NVDA; JAWS y Narrador siguen la misma lógica.
+
+* Regiones semánticas: el lector anuncia "región principal", "navegación" y "encabezado nivel 1" al recorrer la página, y permite saltar entre regiones con teclas rápidas (por ejemplo, D para región principal en NVDA).
+* Etiquetas vinculadas: al enfocar un campo, el lector anuncia "Correo Electrónico, edición requerida" o "Contraseña, edición de contraseña requerida", en lugar de un campo sin nombre.
+* Campos obligatorios: el lector agrega "requerido" al anunciar el campo, gracias a required y aria-required.
+* Mensajes con role="alert": al aparecer, el lector anuncia de inmediato "alerta: Credenciales inválidas o usuario inactivo" o "alerta: Ha cerrado sesión correctamente", sin que el usuario tenga que buscarlos.
+* aria-describedby: al entrar al formulario con un error, el lector lee también el mensaje de error asociado.
+* Foco visible: al navegar con Tab, el lector anuncia el elemento enfocado ("botón, Cerrar sesión segura del sistema") y el foco se ve con un contorno de alto contraste.
+* Modo oscuro: el botón anuncia "Cambiar tema. Tema actual: oscuro" y actualiza el anuncio al cambiar, para que el usuario sepa el estado sin depender del color.
+* Emojis decorativos: se ocultan a lectores con aria-hidden, así no se anuncia "gráfico de barras" antes del título de cada tarjeta.
 
 ### Diagrama de Clases
 https://drive.google.com/file/d/186UyoMGrEUDujmmbJauR2BH1_pfwHJim/view?usp=sharing
 
-
 ### Casos de Uso Implementados
-https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/5
-pablo vazquez vistas controller y dtos
-https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/3
-pablo vazquez entidades con herencia, repositorios servicios e implementaciones
-https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/4
-luciano spinazzola modificacion propertys, y entidades sin herencia
-| [COMPLETAR] |  |
 
 | Caso de Uso | Responsable | Pull Request |
 | --- | --- | --- |
+| Login seguro con roles (BCrypt, CSRF, rutas protegidas) | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/6 |
+| Entidades con herencia, repositorios, servicios e implementaciones | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/3 |
+| Vistas, controllers y DTOs | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/5 |
+| Configuración de properties y entidades sin herencia | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/4 |
 
 ### Metodología de Trabajo
 
