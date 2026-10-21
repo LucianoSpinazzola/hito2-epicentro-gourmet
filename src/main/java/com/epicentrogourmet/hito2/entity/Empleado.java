@@ -45,4 +45,10 @@ public abstract class Empleado {
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 
+	// Unidad de venta donde el empleado esta asignado como staff.
+	// Es opcional: un empleado puede no tener unidad asignada al inicio.
+	@ManyToOne
+	@JoinColumn(name = "id_unidad_asignada")
+	private UnidadDeVenta unidadAsignada;
+
 }

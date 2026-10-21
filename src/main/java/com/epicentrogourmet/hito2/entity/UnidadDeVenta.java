@@ -37,11 +37,15 @@ public abstract class UnidadDeVenta {
 	@ManyToOne
 	@JoinColumn(name = "id_festival", nullable = false)
 	private Festival festival;
+
 	@ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "unidad_venta_plato",
-        joinColumns = @JoinColumn(name = "id_unidad_venta"),
-        inverseJoinColumns = @JoinColumn(name = "id_plato")
-    )
-    private java.util.Set<Plato> platos; 
+	@JoinTable(name = "unidad_venta_plato", joinColumns = @JoinColumn(name = "id_unidad_venta"), inverseJoinColumns = @JoinColumn(name = "id_plato"))
+	private java.util.Set<Plato> platos;
+
+	// Staff asignado a esta unidad (lado inverso de Empleado.unidadAsignada).
+	// No se cascadea ni se borra en cascada: dar de baja una unidad no debe borrar
+	// empleados.
+	@OneToMany(mappedBy = "unidadAsignada")
+	private java.util.List<Empleado> staff;
+
 }
