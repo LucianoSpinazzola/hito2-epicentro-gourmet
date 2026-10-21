@@ -62,6 +62,10 @@ public class PedidoController {
 			@AuthenticationPrincipal UserDetails userDetails) {
 		Pedido pedido = modelMapper.map(pedidoForm, Pedido.class);
 
+		// Forzamos id null para que Hibernate siempre haga INSERT y no UPDATE
+		// sobre un pedido existente cuando ModelMapper copia un id del DTO.
+		pedido.setIdPedido(null);
+
 		pedido.setFecha(LocalDate.now());
 		pedido.setEstado("ENTREGADO");
 		pedido.setItems(new HashSet<>());
