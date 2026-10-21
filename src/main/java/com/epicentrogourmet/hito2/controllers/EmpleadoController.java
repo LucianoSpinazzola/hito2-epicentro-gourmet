@@ -53,7 +53,7 @@ public class EmpleadoController {
 		}
 		Usuario usuarioLogueado = usuarioOpt.get();
 
-		Optional<Empleado> empleadoOpt = empleadoRepository.findById(usuarioLogueado.getIdUsuario());
+		Optional<Empleado> empleadoOpt = empleadoRepository.findByUsuario_IdUsuario(usuarioLogueado.getIdUsuario());
 		if (empleadoOpt.isEmpty()) {
 			model.addAttribute("mensajeError", "No se encontró un perfil de empleado activo para este usuario.");
 			return "index";
@@ -67,6 +67,7 @@ public class EmpleadoController {
 
 		model.addAttribute("titulo", "Recibo de Haberes Digital");
 		model.addAttribute("empleado", emp);
+		model.addAttribute("rolUsuario", usuarioLogueado.getRol().getNombreRol());
 		model.addAttribute("sueldoCalculado", sueldoFinalCalculado);
 
 		return "empleados/recibo";
@@ -82,7 +83,7 @@ public class EmpleadoController {
 		}
 		Usuario usuarioLogueado = usuarioOpt.get();
 
-		Optional<Empleado> empleadoOpt = empleadoRepository.findById(usuarioLogueado.getIdUsuario());
+		Optional<Empleado> empleadoOpt = empleadoRepository.findByUsuario_IdUsuario(usuarioLogueado.getIdUsuario());
 		if (empleadoOpt.isEmpty()) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Perfil no encontrado");
 			return;

@@ -9,6 +9,7 @@
             --bg-principal: #f4f6f9;
             --bg-tarjeta: #ffffff;
             --texto-principal: #333333;
+            --texto-secundario: #666666;
             --borde: #cccccc;
             --primario: #007bff;
             --primario-hover: #0056b3;
@@ -20,6 +21,7 @@
             --bg-principal: #121212;
             --bg-tarjeta: #1e1e1e;
             --texto-principal: #e0e0e0;
+            --texto-secundario: #a0a0a0;
             --borde: #444444;
             --primario: #3792ff;
             --primario-hover: #1e70d6;
@@ -59,14 +61,21 @@
             margin-bottom: 20px;
         }
 
-        .info-group {
-            margin-bottom: 12px;
-            font-size: 15px;
+        /* Lista de definiciones para los datos del empleado: NVDA la recorre como
+           "lista de definiciones" y anuncia término y definición de cada par. */
+        dl.info-list {
+            margin: 0 0 20px 0;
         }
 
-        .info-label {
+        dt.info-label {
             font-weight: bold;
             color: var(--primario);
+            margin-top: 12px;
+        }
+
+        dd.info-value {
+            margin: 0 0 4px 0;
+            font-size: 15px;
         }
 
         .monto-panel {
@@ -110,54 +119,74 @@
             text-decoration: none;
             font-size: 14px;
         }
+
+        /* Foco visible para navegación por teclado en botones y enlaces */
+        .btn-pdf:focus-visible,
+        .btn-volver:focus-visible,
+        #theme-toggle:focus-visible {
+            outline: 3px solid var(--primario);
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
 
+    <!-- main: región principal. NVDA la anuncia como "región principal". -->
     <main class="recibo-container" role="main" aria-labelledby="recibo-title">
-        
+
         <header class="header-recibo">
+            <!-- h1 único: NVDA lo anuncia como "encabezado nivel 1". -->
             <h1 id="recibo-title" th:text="${titulo}">Recibo de Haberes</h1>
-            <button id="theme-toggle" style="background: none; border: none; cursor: pointer; font-size: 18px;" aria-label="Cambiar contraste">🌓</button>
+            <!-- Botón de tema con aria-label actualizado por el script al cambiar. -->
+            <button id="theme-toggle" style="background: none; border: none; cursor: pointer; font-size: 18px;"
+                    aria-label="Cambiar entre modo claro y modo oscuro">
+                <span aria-hidden="true">🌓</span> Modo
+            </button>
         </header>
 
-        <!-- Datos Dinámicos provistos por el EmpleadoController -->
-        <div class="info-group">
-            <span class="info-label">ID Empleado:</span>
-            <span th:text="${empleado.idEmpleado}">0</span>
-        </div>
-        <div class="info-group">
-            <span class="info-label">Usuario:</span>
-            <span th:text="${session.usuarioLogueado.userName}">Usuario</span>
-        </div>
-        <div class="info-group">
-            <span class="info-label">Rol del Puesto:</span>
-            <span th:text="${session.usuarioLogueado.rol.nombreRol}">Rol</span>
-        </div>
+        <!-- Datos del empleado como lista de definiciones.
+             NVDA anuncia "lista de definiciones" y lee término y definición de cada par. -->
+        <dl class="info-list">
+            <dt class="info-label">ID Empleado</dt>
+            <dd class="info-value" th:text="${empleado.idEmpleado}">0</dd>
 
-        <!-- Panel del Sueldo Neto Liquidado en Java -->
-        <div class="monto-panel">
+            <dt class="info-label">Usuario</dt>
+            <dd class="info-value" th:text="${#authentication.name}">Usuario</dd>
+
+            <dt class="info-label">Rol del Puesto</dt>
+            <dd class="info-value" th:text="${rolUsuario}">Rol</dd>
+        </dl>
+
+        <!-- Panel del sueldo neto. aria-live="polite" hace que NVDA anuncie el monto
+             cuando la vista termina de renderizar. -->
+        <div class="monto-panel" role="status" aria-live="polite">
             <span>SUELDO NETO A COBRAR:</span>
             <span style="color: var(--exito);" th:text="'$' + ${#numbers.formatDecimal(sueldoCalculado, 1, 2)}">$0.00</span>
         </div>
 
-        <!-- GATILLO DEL PDF: Apunta al método descargarReciboPdf del controlador -->
-        		<a href="/empleados/descargar-sueldo" class="btn-pdf">📄 Descargar Recibo Oficial en PDF</a>
-        
-        <a th:href="@{/home}" class="btn-volver">Volver al Panel</a>
+        <!-- Enlace al PDF con aria-label explícito para que NVDA anuncie el destino. -->
+        <a th:href="@{/empleados/descargar-sueldo}" class="btn-pdf"
+           aria-label="Descargar recibo oficial de haberes en PDF">Descargar Recibo Oficial en PDF</a>
+
+        <a th:href="@{/home}" class="btn-volver" aria-label="Volver al panel de control">Volver al Panel</a>
 
     </main>
 
+    <!-- Script del modo oscuro con aria-label sincronizado, igual que en login e index. -->
     <script>
         const themeToggle = document.getElementById('theme-toggle');
         const currentTheme = localStorage.getItem('theme') || 'light';
+
         document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.setAttribute('aria-label', 'Cambiar tema. Tema actual: ' + (currentTheme === 'dark' ? 'oscuro' : 'claro'));
 
         themeToggle.addEventListener('click', () => {
             let theme = document.documentElement.getAttribute('data-theme');
             let newTheme = (theme === 'dark') ? 'light' : 'dark';
+
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+            themeToggle.setAttribute('aria-label', 'Cambiar tema. Tema actual: ' + (newTheme === 'dark' ? 'oscuro' : 'claro'));
         });
     </script>
 </body>
