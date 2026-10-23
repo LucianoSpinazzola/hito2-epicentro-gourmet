@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Reportes Gerenciales</title>
+    <style>
+        :root {
+            --bg-principal: #f4f6f9; --bg-tarjeta: #ffffff; --texto-principal: #333333;
+            --texto-secundario: #666666; --borde: #cccccc; --primario: #007bff;
+            --primario-hover: #0056b3; --exito: #28a745;
+        }
+        [data-theme="dark"] {
+            --bg-principal: #121212; --bg-tarjeta: #1e1e1e; --texto-principal: #e0e0e0;
+            --texto-secundario: #a0a0a0; --borde: #444444; --primario: #3792ff;
+            --primario-hover: #1e70d6; --exito: #2ea44f;
+        }
+        body { font-family: Arial, sans-serif; background-color: var(--bg-principal); color: var(--texto-principal); margin: 0; padding: 20px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-tarjeta); padding: 15px 30px; border-radius: 8px; margin-bottom: 25px; border: 1px solid var(--borde); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+        .card { background-color: var(--bg-tarjeta); padding: 20px; border-radius: 8px; border: 1px solid var(--borde); }
+        .resumen { font-size: 18px; margin-bottom: 15px; }
+        .resumen strong { color: var(--exito); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; border-bottom: 1px solid var(--borde); text-align: left; }
+        th { background-color: var(--bg-principal); }
+        .btn-volver { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: var(--primario); color: white; text-decoration: none; border-radius: 4px; font-weight: bold; }
+        #theme-toggle { background: var(--borde); color: var(--texto-principal); border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <nav class="navbar" aria-label="Barra de navegación de reportes">
+        <span style="font-weight: bold; font-size: 18px;">Reportes Gerenciales</span>
+        <button id="theme-toggle" aria-label="Cambiar entre modo claro y modo oscuro">🌓 Modo</button>
+    </nav>
+
+    <main role="main" aria-labelledby="titulo-reportes">
+        <h1 id="titulo-reportes">Reportes del Festival</h1>
+
+        <section class="card" style="margin-bottom: 20px;">
+            <h2>Recaudación total del festival</h2>
+            <p class="resumen">
+                <span th:text="${recaudacion.nombreFestival}">Festival</span> — 
+                <strong th:text="'$' + ${#numbers.formatDecimal(recaudacion.recaudacionTotal, 1, 2)}">$0.00</strong>
+            </p>
+        </section>
+
+        <div class="grid">
+            <section class="card">
+                <h2>Ranking por Recaudación</h2>
+                <table>
+                    <thead>
+                        <tr><th>#</th><th>Unidad</th><th>Código</th><th>Recaudado</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="r, stat : ${rankingRecaudacion}">
+                            <td th:text="${stat.count}">1</td>
+                            <td th:text="${r.nombreComercial}">Unidad</td>
+                            <td th:text="${r.codigo}">Código</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(r.totalRecaudado, 1, 2)}">$0.00</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(rankingRecaudacion)}"><td colspan="4">Sin datos.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="card">
+                <h2>Unidades con Mayor Canon</h2>
+                <table>
+                    <thead>
+                        <tr><th>#</th><th>Unidad</th><th>Tipo</th><th>Canon</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="r, stat : ${mayoresCanon}">
+                            <td th:text="${stat.count}">1</td>
+                            <td th:text="${r.nombreComercial}">Unidad</td>
+                            <td th:text="${r.tipoUnidad}">Tipo</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(r.canonCalculado, 1, 2)}">$0.00</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(mayoresCanon)}"><td colspan="4">Sin datos.</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <a th:href="@{/home}" class="btn-volver">Volver al Panel</a>
+    </main>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = (theme === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>
