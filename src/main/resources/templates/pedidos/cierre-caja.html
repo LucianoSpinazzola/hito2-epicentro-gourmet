@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Cierre de Caja</title>
+    <style>
+        :root { --bg-principal:#f4f6f9; --bg-tarjeta:#fff; --texto-principal:#333; --borde:#ccc; --primario:#007bff; --exito:#28a745; --danger:#dc3545; }
+        [data-theme="dark"] { --bg-principal:#121212; --bg-tarjeta:#1e1e1e; --texto-principal:#e0e0e0; --borde:#444; --primario:#3792ff; --exito:#2ea44f; --danger:#ff6b7b; }
+        body { font-family: Arial, sans-serif; background: var(--bg-principal); color: var(--texto-principal); margin:0; padding:20px; display:flex; justify-content:center; min-height:100vh; }
+        .container { background: var(--bg-tarjeta); padding:30px; border-radius:8px; border:1px solid var(--borde); width:100%; max-width:650px; }
+        .header { display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--primario); padding-bottom:10px; margin-bottom:20px; }
+        .resumen { background: var(--bg-principal); padding:15px; border-radius:4px; border:1px solid var(--borde); margin-bottom:20px; }
+        .resumen dt { font-weight:bold; color:var(--primario); margin-top:8px; }
+        .resumen dd { margin:0 0 4px 0; font-size:16px; }
+        .monto { font-size:22px; font-weight:bold; color:var(--exito); }
+        .btn-confirmar { width:100%; padding:14px; background:var(--exito); color:#fff; border:none; border-radius:4px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:10px; }
+        .btn-confirmar:disabled { background:var(--borde); cursor:not-allowed; color:var(--texto-principal); }
+        .btn-volver { display:block; text-align:center; margin-top:15px; color:var(--texto-principal); text-decoration:none; }
+        .alert { padding:12px; border-radius:4px; margin-bottom:15px; font-size:14px; }
+        .alert-danger { background:#f8d7da; color:#721c24; }
+        .alert-success { background:#d4edda; color:#155724; }
+        table { width:100%; border-collapse:collapse; margin-top:15px; }
+        th, td { padding:8px; border-bottom:1px solid var(--borde); text-align:left; }
+        th { background:var(--bg-principal); }
+    </style>
+</head>
+<body>
+    <main class="container" role="main" aria-labelledby="titulo-cierre">
+        <header class="header">
+            <h1 id="titulo-cierre">Cierre de Caja</h1>
+            <button id="theme-toggle" style="background:none;border:none;cursor:pointer;font-size:18px;" aria-label="Cambiar modo oscuro">🌓 Modo</button>
+        </header>
+
+        <div th:if="${param.cierreExitoso}" class="alert alert-success" role="alert">Cierre de caja registrado correctamente.</div>
+        <div th:if="${param.sinPendientes}" class="alert alert-danger" role="alert">No hay pedidos pendientes de cierre.</div>
+
+        <section class="resumen">
+            <dl>
+                <dt>Unidad de venta</dt>
+                <dd th:text="${unidad.nombreComercial}">Unidad</dd>
+                <dt>Pedidos pendientes</dt>
+                <dd th:text="${cantidadPendiente}">0</dd>
+                <dt>Total acumulado</dt>
+                <dd class="monto" th:text="'$' + ${#numbers.formatDecimal(totalPendiente, 1, 2)}">$0.00</dd>
+            </dl>
+        </section>
+
+        <form th:action="@{/pedidos/cierre-caja}" method="post">
+            <button type="submit" class="btn-confirmar" th:disabled="${cantidadPendiente == 0}">Confirmar Cierre de Caja</button>
+        </form>
+        <a th:href="@{/home}" class="btn-volver">Volver al Panel</a>
+
+        <section th:if="${not #lists.isEmpty(historial)}" style="margin-top:30px;">
+            <h2>Historial de Cierres</h2>
+            <table>
+                <thead><tr><th>Fecha y Hora</th><th>Pedidos</th><th>Total</th></tr></thead>
+                <tbody>
+                    <tr th:each="c : ${historial}">
+                        <td th:text="${#temporals.format(c.fechaHora, 'dd/MM/yyyy HH:mm')}">--</td>
+                        <td th:text="${c.cantidadPedidos}">0</td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(c.totalVentas, 1, 2)}">$0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = (theme === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

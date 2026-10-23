@@ -64,13 +64,14 @@
             margin-bottom: 20px;
         }
 
-        label {
+        label,
+        .info-unidad-label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
 
-        select, .input-search {
+        select, .input-search, .info-unidad {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--borde);
@@ -79,6 +80,18 @@
             color: var(--texto-principal);
             font-size: 15px;
             box-sizing: border-box;
+        }
+
+        .info-unidad {
+            background-color: var(--bg-principal);
+            border-left: 4px solid var(--exito);
+            font-weight: bold;
+        }
+
+        .ayuda {
+            font-size: 13px;
+            color: var(--texto-secundario);
+            margin-top: 4px;
         }
 
         .input-search {
@@ -159,38 +172,85 @@
             text-decoration: none;
             font-size: 14px;
         }
+
+        .alert {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        [data-theme="dark"] .alert-danger {
+            background-color: #2c0b0e;
+            color: #f8b4b9;
+        }
+
+        /* Foco visible para navegación por teclado en todos los controles */
+        .btn-submit:focus-visible,
+        .btn-volver:focus-visible,
+        #theme-toggle:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 3px solid var(--primario);
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
 
-    <main class="form-container" role="main">
+    <main class="form-container" role="main" aria-labelledby="titulo-pedido">
+
         <header class="header-form">
-            <h1>Registrar Nuevo Pedido</h1>
-            <button id="theme-toggle" style="background: none; border: none; cursor: pointer; font-size: 18px;">🌓</button>
+            <h1 id="titulo-pedido">Registrar Nuevo Pedido</h1>
+            <button id="theme-toggle" class="btn-accesibilidad"
+                    style="background: var(--borde); color: var(--texto-principal); border: none;
+                           padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px;"
+                    aria-label="Cambiar entre modo claro y modo oscuro">
+                <span aria-hidden="true">🌓</span> Modo
+            </button>
         </header>
 
-        <form th:action="@{/pedidos/guardar}" th:object="${pedidoForm}" method="post">
+        <!-- Error cuando el POST llega sin items -->
+        <div th:if="${param.errorVacio}" class="alert alert-danger" role="alert">
+            Debe seleccionar al menos un plato con cantidad mayor a cero antes de confirmar la comanda.
+        </div>
+
+        <form th:action="@{/pedidos/guardar}" th:object="${pedidoForm}" method="post"
+              aria-label="Formulario de registro de pedido">
+
+            <!-- La unidad ya NO es elegible: viene fijada desde el perfil del cajero -->
             <div class="form-group">
-                <label for="idUnidadVenta">Puesto Comercial Emisor:</label>
-                <select id="idUnidadVenta" th:field="*{idUnidadVenta}" required>
-                    <option value="" disabled selected>-- Seleccione el puesto --</option>
-                    <option th:each="unidad : ${unidadesVenta}" 
-                            th:value="${unidad.idUnidadDeVenta}" 
-                            th:text="${unidad.nombreComercial}"></option>
-                </select>
+                <span class="info-unidad-label" id="lbl-unidad">Puesto Comercial</span>
+                <p class="info-unidad"
+                   th:text="${unidadAsignada.nombreComercial}"
+                   aria-labelledby="lbl-unidad">Unidad</p>
+                <p class="ayuda">
+                    Código:
+                    <span th:text="${unidadAsignada.codigo}">Código</span>
+                    — esta unidad está fijada por tu perfil de cajero.
+                </p>
+                <!-- Se envía igual por si algún día se reutiliza la vista, pero el server lo ignora -->
+                <input type="hidden" th:field="*{idUnidadVenta}" />
             </div>
 
             <div class="form-group">
-                <label for="buscador">Filtrar Menú Rápido:</label>
-                <input type="text" id="buscador" class="input-search" placeholder="🔍 Escriba para buscar un plato...">
-                
+                <label for="buscador">Filtrar menú rápido</label>
+                <input type="text" id="buscador" class="input-search"
+                       placeholder="Escriba para buscar un plato..."
+                       aria-label="Filtrar platos por nombre" />
+
                 <div class="table-container">
                     <table class="menu-table">
                         <thead>
                             <tr>
-                                <th>Producto</th>
-                                <th>Precio</th>
-                                <th style="text-align: center;">Cantidad</th>
+                                <th scope="col">Producto</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col" style="text-align: center;">Cantidad</th>
                             </tr>
                         </thead>
                         <tbody id="lista-productos">
@@ -201,8 +261,11 @@
                                     <input type="hidden" th:field="*{items[__${stat.index}__].idPlato}" />
                                     <input type="hidden" th:field="*{items[__${stat.index}__].nombrePlato}" />
                                     <input type="hidden" th:field="*{items[__${stat.index}__].precioVenta}" />
-                                    <input type="number" th:field="*{items[__${stat.index}__].cantidad}" 
-                                           class="input-cantidad" min="0" max="20" required />
+                                    <input type="number"
+                                           th:field="*{items[__${stat.index}__].cantidad}"
+                                           class="input-cantidad"
+                                           min="0" max="20" required
+                                           th:attr="aria-label='Cantidad para ' + ${item.nombrePlato}" />
                                 </td>
                             </tr>
                         </tbody>
@@ -212,16 +275,19 @@
 
             <div class="panel-total">
                 <span>TOTAL COMANDA:</span>
-                <span style="color: var(--exito);" id="total-comanda">$0.00</span>
+                <span style="color: var(--exito);" id="total-comanda"
+                      aria-live="polite" aria-label="Total de la comanda">$0.00</span>
             </div>
 
             <button type="submit" class="btn-submit">Confirmar e Impactar Comanda</button>
-            <a th:href="@{/home}" class="btn-volver">Cancelar y Volver</a>
+            <a th:href="@{/home}" class="btn-volver"
+               aria-label="Cancelar y volver al panel de control">Cancelar y Volver</a>
         </form>
     </main>
 
     <script>
-        document.getElementById('buscador').addEventListener('input', function(e) {
+        // --- Buscador de platos ---
+        document.getElementById('buscador').addEventListener('input', function (e) {
             const texto = e.target.value.toLowerCase();
             document.querySelectorAll('.item-fila').forEach(fila => {
                 const nombre = fila.querySelector('.item-nombre').textContent.toLowerCase();
@@ -229,26 +295,35 @@
             });
         });
 
-        document.querySelectorAll('.input-cantidad').forEach(input => {
-            input.addEventListener('input', function() {
-                let total = 0;
-                document.querySelectorAll('.item-fila').forEach(fila => {
-                    const precio = parseFloat(fila.querySelector('.item-precio').textContent) || 0;
-                    const cantidad = parseInt(fila.querySelector('.input-cantidad').value) || 0;
-                    total += (precio * cantidad);
-                });
-                document.getElementById('total-comanda').textContent = '$' + total.toFixed(2);
+        // --- Recálculo del total en tiempo real ---
+        function recalcularTotal() {
+            let total = 0;
+            document.querySelectorAll('.item-fila').forEach(fila => {
+                const precio = parseFloat(fila.querySelector('.item-precio').textContent) || 0;
+                const cantidad = parseInt(fila.querySelector('.input-cantidad').value) || 0;
+                total += (precio * cantidad);
             });
+            document.getElementById('total-comanda').textContent = '$' + total.toFixed(2);
+        }
+
+        document.querySelectorAll('.input-cantidad').forEach(input => {
+            input.addEventListener('input', recalcularTotal);
         });
 
+        // --- Modo oscuro con aria-label dinámico (igual que login/index) ---
         const themeToggle = document.getElementById('theme-toggle');
         const currentTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.setAttribute('aria-label',
+            'Cambiar tema. Tema actual: ' + (currentTheme === 'dark' ? 'oscuro' : 'claro'));
+
         themeToggle.addEventListener('click', () => {
-            let theme = document.documentElement.getAttribute('data-theme');
-            let newTheme = (theme === 'dark') ? 'light' : 'dark';
+            const theme = document.documentElement.getAttribute('data-theme');
+            const newTheme = (theme === 'dark') ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+            themeToggle.setAttribute('aria-label',
+                'Cambiar tema. Tema actual: ' + (newTheme === 'dark' ? 'oscuro' : 'claro'));
         });
     </script>
 </body>
