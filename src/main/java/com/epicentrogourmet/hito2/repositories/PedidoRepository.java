@@ -10,4 +10,5 @@ import com.epicentrogourmet.hito2.entity.Pedido;
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 	List<Pedido> findByUnidadVentaIdUnidadDeVentaAndUnidadVentaFestivalIdFestival(Long idUnidadVenta, Long idFestival);
     List<Pedido> findByUnidadVentaFestivalIdFestival(Long idFestival);
+    List<Pedido> findByUnidadVentaIdUnidadDeVentaAndCierreCajaIsNull(Long idUnidad);
 }

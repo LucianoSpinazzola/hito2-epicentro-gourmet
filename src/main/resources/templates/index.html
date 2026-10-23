@@ -172,6 +172,14 @@
         <div th:if="${param.pedidoExito}" class="alert" role="alert">
             ¡El pedido ha sido registrado e impactado en la base de datos con éxito!
         </div>
+		<div th:if="${param.errorNoCajero}" class="alert" role="alert"
+		     style="background-color:#f8d7da; color:#721c24;">
+		    Solo los usuarios con perfil de cajero pueden registrar pedidos.
+		</div>
+		<div th:if="${param.errorSinUnidad}" class="alert" role="alert"
+		     style="background-color:#f8d7da; color:#721c24;">
+		    Tu usuario no tiene una unidad de venta asignada. Contactá al responsable.
+		</div>
 
         <div class="dashboard-grid">
 
@@ -190,6 +198,12 @@
                 <a th:href="@{/empleados/mi-sueldo}" class="btn-link" style="background-color: #28a745;"
                    aria-label="Ir a ver mi recibo de sueldo digital">Ver Mi Recibo</a>
             </section>
+			
+			<section class="card" aria-labelledby="title-cierre" sec:authorize="hasRole('EMPLEADO')" style="border-left: 4px solid #ffc107;">
+			    <h2 id="title-cierre"><span aria-hidden="true">💵</span> Cierre de Caja</h2>
+			    <p>Consolidá la recaudación de tu unidad y cerrá la jornada.</p>
+			    <a th:href="@{/pedidos/cierre-caja}" class="btn-link" style="background-color:#ffc107; color:#333;" aria-label="Ir al cierre de caja de mi unidad">Cerrar Caja</a>
+			</section>
 
             <section class="card" aria-labelledby="title-reportes" sec:authorize="hasRole('ADMIN')">
                 <h2 id="title-reportes"><span aria-hidden="true">📈</span> Reportes Gerenciales</h2>

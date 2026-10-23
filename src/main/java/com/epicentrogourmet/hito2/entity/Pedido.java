@@ -35,4 +35,8 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ItemPedido> items; 
+    
+    @ManyToOne
+    @JoinColumn(name = "id_cierre_caja")
+    private CierreCaja cierreCaja;
 }
