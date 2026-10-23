@@ -15,4 +15,5 @@ public interface IUnidadDeVentaService {
     
     List<ReporteMayoresCanonDTO> obtenerUnidadesMayorCanon(Long idFestival, int x);
     PlatoDTO obtenerPlatoEstrella(Long idUnidad, Long idFestival);
+    List<com.epicentrogourmet.hito2.dtos.ReporteRecaudacionUnidadDTO> obtenerRankingRecaudacion(Long idFestival, int limite);
 }

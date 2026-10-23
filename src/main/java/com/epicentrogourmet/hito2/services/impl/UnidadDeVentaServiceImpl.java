@@ -175,4 +175,23 @@ public class UnidadDeVentaServiceImpl implements IUnidadDeVentaService {
 
 		return null;
 	}
+    @Override
+    public List<com.epicentrogourmet.hito2.dtos.ReporteRecaudacionUnidadDTO> obtenerRankingRecaudacion(Long idFestival, int limite) {
+        List<UnidadDeVenta> unidades = unidadDeVentaRepository.findByFestivalIdFestivalAndEliminadoFalse(idFestival);
+        List<com.epicentrogourmet.hito2.dtos.ReporteRecaudacionUnidadDTO> lista = new ArrayList<>();
+
+        for (UnidadDeVenta u : unidades) {
+            List<Pedido> pedidos = pedidoRepository.findByUnidadVentaIdUnidadDeVentaAndUnidadVentaFestivalIdFestival(u.getIdUnidadDeVenta(), idFestival);
+            double total = 0.0;
+            if (pedidos != null) {
+                for (Pedido p : pedidos) total += p.getTotal();
+            }
+            lista.add(new com.epicentrogourmet.hito2.dtos.ReporteRecaudacionUnidadDTO(u.getNombreComercial(), u.getCodigo(), total));
+        }
+
+        return lista.stream()
+                .sorted((a, b) -> Double.compare(b.getTotalRecaudado(), a.getTotalRecaudado()))
+                .limit(limite)
+                .toList();
+    }
 }
