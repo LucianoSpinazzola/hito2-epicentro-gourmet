@@ -25,11 +25,13 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(authorize -> authorize
-				.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-				.requestMatchers("/", "/home", "/login").permitAll().requestMatchers("/admin/**").hasRole("ADMIN")
-				.requestMatchers("/responsable/**").hasRole("RESPONSABLE").requestMatchers("/empleados/**")
-				.hasRole("EMPLEADO").requestMatchers("/pedidos/**").hasRole("EMPLEADO").anyRequest().authenticated())
+		http.authorizeHttpRequests(
+				authorize -> authorize.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+						.requestMatchers("/", "/home", "/login").permitAll().requestMatchers("/admin/**")
+						.hasRole("ADMIN").requestMatchers("/responsable/**").hasRole("RESPONSABLE")
+						.requestMatchers("/empleados/mi-sueldo", "/empleados/descargar-sueldo").hasRole("EMPLEADO")
+						.requestMatchers("/empleados/nuevo").hasAnyRole("RESPONSABLE", "ADMIN")
+						.requestMatchers("/pedidos/**").hasRole("EMPLEADO").anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.defaultSuccessUrl("/home", true).failureUrl("/login?error=true").permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout=true")
