@@ -71,6 +71,8 @@ https://drive.google.com/file/d/186UyoMGrEUDujmmbJauR2BH1_pfwHJim/view?usp=shari
 ### Casos de Uso Implementados
 
 | Caso de Uso | Responsable | Pull Request |
+|  |  |  |
+| informe administrador | pablo vazquez| https://github.com/LucianoSpinazzola/hz ito2-epicentro-gourmet/pull/9
 | --- | cajero por unidad de venta y cierre de caja|Pablo Vazquez |https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/8
 | Login seguro con roles (BCrypt, CSRF, rutas protegidas) | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/6 |
 | Alta de Empleado (formulario accesible, validaciones, Cajero/Cocinero) | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/7 |
