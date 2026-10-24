@@ -87,6 +87,15 @@ public class EmpleadoController {
 
 		com.epicentrogourmet.hito2.entity.Empleado emp = empleadoOpt.get();
 		Long idFestivalActivo = 1L;
+		
+		
+		
+		if (emp.getUnidadAsignada() != null && emp.getUnidadAsignada().getFestival() != null) {
+		    idFestivalActivo = emp.getUnidadAsignada().getFestival().getIdFestival();
+		}
+		
+		
+		
 		int diasDuracionFestival = festivalService.calcularDuracionEnDias(idFestivalActivo);
 		double sueldoFinalCalculado = empleadoService.calcularSueldoTotal(emp.getIdEmpleado(), diasDuracionFestival,
 				idFestivalActivo);
@@ -118,6 +127,16 @@ public class EmpleadoController {
 
 		com.epicentrogourmet.hito2.entity.Empleado emp = empleadoOpt.get();
 		Long idFestivalActivo = 1L;
+		
+		
+		
+		if (emp.getUnidadAsignada() != null && emp.getUnidadAsignada().getFestival() != null) {
+		    idFestivalActivo = emp.getUnidadAsignada().getFestival().getIdFestival();
+		}
+		
+		
+		
+		
 		int diasDuracionFestival = festivalService.calcularDuracionEnDias(idFestivalActivo);
 		double sueldoFinal = empleadoService.calcularSueldoTotal(emp.getIdEmpleado(), diasDuracionFestival,
 				idFestivalActivo);
