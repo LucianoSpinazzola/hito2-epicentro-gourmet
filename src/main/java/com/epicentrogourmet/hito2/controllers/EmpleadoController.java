@@ -231,6 +231,12 @@ public class EmpleadoController {
 			return "empleados/formulario";
 		}
 
+		if (form.getEmail() == null || form.getEmail().isBlank()) {
+			model.addAttribute("mensajeError", "El correo electrónico es obligatorio.");
+			model.addAttribute("campoError", "email");
+			return "empleados/formulario";
+		}
+
 		if (form.getDiaNacimiento() == null || form.getMesNacimiento() == null || form.getAnioNacimiento() == null) {
 			model.addAttribute("mensajeError", "La fecha de nacimiento es obligatoria.");
 			model.addAttribute("campoError", "fechaNacimiento");
@@ -303,11 +309,10 @@ public class EmpleadoController {
 			return "empleados/formulario";
 		}
 
-		String username = form.getNombre().toLowerCase() + "." + form.getApellido().toLowerCase() + "@epicentro.com";
+		String username = form.getEmail().toLowerCase();
 		if (usuarioRepository.findByUserName(username).isPresent()) {
-			model.addAttribute("mensajeError",
-					"Ya existe un usuario con ese nombre. Probá con otro nombre o apellido.");
-			model.addAttribute("campoError", "nombre");
+			model.addAttribute("mensajeError", "Ya existe un usuario con ese correo electrónico.");
+			model.addAttribute("campoError", "email");
 			return "empleados/formulario";
 		}
 
@@ -401,7 +406,7 @@ public class EmpleadoController {
 			empleadoRepository.save(cocinero);
 		}
 
-		// Envio de credenciales al empleado recien creado.
+		// Envio de credenciales al empleado recien creado, a su correo electronico.
 		mailService.enviarCredenciales(username, username, claveAleatoria, unidadOpt.get().getNombreComercial());
 
 		model.addAttribute("mensajeExito", "Empleado dado de alta correctamente. Usuario: " + username);
