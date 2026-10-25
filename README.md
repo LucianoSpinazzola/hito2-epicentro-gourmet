@@ -97,7 +97,7 @@ https://drive.google.com/file/d/186UyoMGrEUDujmmbJauR2BH1_pfwHJim/view?usp=shari
 | Caso de Uso | Responsable | Pull Request |
 | --- | --- | --- |
 | Login seguro con roles (BCrypt, CSRF, rutas protegidas) | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/6 |
-| Alta de Empleado (formulario accesible, validaciones, Cajero/Cocinero) | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/7 |
+| Alta de Empleado (formulario accesible, validaciones, Cajero/Cocinero, envío de credenciales por mail) | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/7 y https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/11 |
 | Reportes de Administrador (Ranking y Mayor Canon) | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/9 |
 | Filtro por unidad de venta y Cierre de Caja | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/8 |
 | Entidades con herencia, repositorios, servicios e implementaciones | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/3 |
