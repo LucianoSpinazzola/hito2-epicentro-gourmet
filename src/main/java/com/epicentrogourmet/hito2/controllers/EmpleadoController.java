@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +30,7 @@ import com.epicentrogourmet.hito2.repositories.UnidadDeVentaRepository;
 import com.epicentrogourmet.hito2.repositories.UsuarioRepository;
 import com.epicentrogourmet.hito2.services.IEmpleadoService;
 import com.epicentrogourmet.hito2.services.IFestivalService;
+import com.epicentrogourmet.hito2.services.MailService;
 import com.lowagie.text.Document;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
@@ -67,6 +69,9 @@ public class EmpleadoController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private MailService mailService;
+
 	// ---------- RECIBO DE SUELDO ----------
 
 	@GetMapping("/mi-sueldo")
@@ -87,15 +92,11 @@ public class EmpleadoController {
 
 		com.epicentrogourmet.hito2.entity.Empleado emp = empleadoOpt.get();
 		Long idFestivalActivo = 1L;
-		
-		
-		
+
 		if (emp.getUnidadAsignada() != null && emp.getUnidadAsignada().getFestival() != null) {
-		    idFestivalActivo = emp.getUnidadAsignada().getFestival().getIdFestival();
+			idFestivalActivo = emp.getUnidadAsignada().getFestival().getIdFestival();
 		}
-		
-		
-		
+
 		int diasDuracionFestival = festivalService.calcularDuracionEnDias(idFestivalActivo);
 		double sueldoFinalCalculado = empleadoService.calcularSueldoTotal(emp.getIdEmpleado(), diasDuracionFestival,
 				idFestivalActivo);
@@ -127,16 +128,11 @@ public class EmpleadoController {
 
 		com.epicentrogourmet.hito2.entity.Empleado emp = empleadoOpt.get();
 		Long idFestivalActivo = 1L;
-		
-		
-		
+
 		if (emp.getUnidadAsignada() != null && emp.getUnidadAsignada().getFestival() != null) {
-		    idFestivalActivo = emp.getUnidadAsignada().getFestival().getIdFestival();
+			idFestivalActivo = emp.getUnidadAsignada().getFestival().getIdFestival();
 		}
-		
-		
-		
-		
+
 		int diasDuracionFestival = festivalService.calcularDuracionEnDias(idFestivalActivo);
 		double sueldoFinal = empleadoService.calcularSueldoTotal(emp.getIdEmpleado(), diasDuracionFestival,
 				idFestivalActivo);
@@ -213,6 +209,7 @@ public class EmpleadoController {
 	}
 
 	@PostMapping("/nuevo")
+	@Transactional
 	public String guardarEmpleado(@ModelAttribute("empleadoForm") EmpleadoFormDTO form, Model model) {
 		model.addAttribute("unidades", unidadDeVentaRepository.findByEliminadoFalse());
 
@@ -231,6 +228,12 @@ public class EmpleadoController {
 		if (form.getDni() == null) {
 			model.addAttribute("mensajeError", "El DNI es obligatorio.");
 			model.addAttribute("campoError", "dni");
+			return "empleados/formulario";
+		}
+
+		if (form.getEmail() == null || form.getEmail().isBlank()) {
+			model.addAttribute("mensajeError", "El correo electrónico es obligatorio.");
+			model.addAttribute("campoError", "email");
 			return "empleados/formulario";
 		}
 
@@ -306,11 +309,10 @@ public class EmpleadoController {
 			return "empleados/formulario";
 		}
 
-		String username = form.getNombre().toLowerCase() + "." + form.getApellido().toLowerCase() + "@epicentro.com";
+		String username = form.getEmail().toLowerCase();
 		if (usuarioRepository.findByUserName(username).isPresent()) {
-			model.addAttribute("mensajeError",
-					"Ya existe un usuario con ese nombre. Probá con otro nombre o apellido.");
-			model.addAttribute("campoError", "nombre");
+			model.addAttribute("mensajeError", "Ya existe un usuario con ese correo electrónico.");
+			model.addAttribute("campoError", "email");
 			return "empleados/formulario";
 		}
 
@@ -403,6 +405,9 @@ public class EmpleadoController {
 			cocinero.setPlusCategoria(plus);
 			empleadoRepository.save(cocinero);
 		}
+
+		// Envio de credenciales al empleado recien creado, a su correo electronico.
+		mailService.enviarCredenciales(username, username, claveAleatoria, unidadOpt.get().getNombreComercial());
 
 		model.addAttribute("mensajeExito", "Empleado dado de alta correctamente. Usuario: " + username);
 		model.addAttribute("empleadoForm", new EmpleadoFormDTO());

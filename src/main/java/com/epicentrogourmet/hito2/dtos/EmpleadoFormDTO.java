@@ -15,6 +15,10 @@ public class EmpleadoFormDTO {
 	private String apellido;
 	private Integer dni;
 
+	// Email del empleado: es su usuario en el sistema y el destinatario del mail de
+	// alta.
+	private String email;
+
 	private Integer diaNacimiento;
 	private Integer mesNacimiento;
 	private Integer anioNacimiento;
