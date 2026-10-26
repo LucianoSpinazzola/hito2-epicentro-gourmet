@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epicentro Gourmet - Festivales</title>
+    <style>
+        :root { --bg: #f4f6f9; --tarjeta: #fff; --texto: #333; --borde: #ccc; --primario: #007bff; --hover: #0056b3; }
+        [data-theme="dark"] { --bg: #121212; --tarjeta: #1e1e1e; --texto: #e0e0e0; --borde: #444; --primario: #3792ff; --hover: #1e70d6; }
+        body { font-family: Arial, sans-serif; background-color: var(--bg); color: var(--texto); margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; background-color: var(--tarjeta); padding: 15px 30px; border-radius: 8px; margin-bottom: 25px; border: 1px solid var(--borde); }
+        .btn-login { background-color: var(--primario); color: white; text-decoration: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; }
+        .btn-login:hover { background-color: var(--hover); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background-color: var(--tarjeta); padding: 20px; border-radius: 8px; border: 1px solid var(--borde); border-top: 4px solid var(--primario); }
+        #theme-toggle { background: none; border: none; cursor: pointer; font-size: 20px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Epicentro Gourmet</h1>
+        <div>
+            <a th:href="@{/login}" class="btn-login">Iniciar Sesión</a>
+            <button id="theme-toggle" style="margin-left: 10px;">🌓</button>
+        </div>
+    </header>
+    <main>
+        <h2>Nuestros Festivales</h2>
+        <div class="grid">
+            <div class="card" th:each="f : ${festivales}">
+                <h3 th:text="${f.nombre}">Nombre Festival</h3>
+                <p><strong>Temporada:</strong> <span th:text="${f.temporada}">Temporada</span></p>
+                <p><strong>Inicio:</strong> <span th:text="${#temporals.format(f.fechaDeInicio, 'dd/MM/yyyy')}">Inicio</span></p>
+                <p><strong>Fin:</strong> <span th:text="${#temporals.format(f.fechaDeFin, 'dd/MM/yyyy')}">Fin</span></p>
+            </div>
+        </div>
+        <div th:if="${#lists.isEmpty(festivales)}" style="margin-top:20px;">
+            <p>No hay festivales cargados en el sistema.</p>
+        </div>
+    </main>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.addEventListener('click', () => {
+            let t = document.documentElement.getAttribute('data-theme');
+            let n = (t === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', n);
+            localStorage.setItem('theme', n);
+        });
+    </script>
+</body>
+</html>

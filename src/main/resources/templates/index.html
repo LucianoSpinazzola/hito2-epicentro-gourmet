@@ -213,12 +213,18 @@
                    aria-label="Ingresar al panel de control gerencial corporativo">Ingresar Reportes</a>
             </section>
 
-            <section class="card" aria-labelledby="title-responsable" sec:authorize="hasRole('RESPONSABLE')">
-                <h2 id="title-responsable"><span aria-hidden="true">🧑‍🍳</span> Gestión de mi Unidad</h2>
-                <p>Altas y bajas de empleados, platos de la unidad y reportes de la unidad a cargo.</p>
-                <a th:href="@{/empleados/nuevo}" class="btn-link"
-                   aria-label="Ir al formulario para dar de alta un nuevo empleado">Alta de Empleado</a>
-            </section>
+            <            <section class="card" aria-labelledby="title-responsable" sec:authorize="hasRole('RESPONSABLE')">
+			    <h2 id="title-responsable"><span aria-hidden="true">🧑‍🍳</span> Gestión de mi Unidad</h2>
+			    <p>Altas y bajas de empleados, platos de la unidad y reportes de la unidad a cargo.</p>
+			    
+			    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+			        <a th:href="@{/empleados/nuevo}" class="btn-link"
+			           aria-label="Ir al formulario para dar de alta un nuevo empleado">Alta de Empleado</a>
+			           
+			        <a th:href="@{/responsable/plato-estrella}" class="btn-link" style="background-color: #17a2b8;"
+			           aria-label="Ver el plato más vendido de mi unidad">Plato Estrella</a>
+			    </div>
+			</section>
 
         </div>
     </main>
