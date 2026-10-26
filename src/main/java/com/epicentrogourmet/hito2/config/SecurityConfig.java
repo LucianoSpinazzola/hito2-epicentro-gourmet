@@ -26,12 +26,28 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(
-				authorize -> authorize.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-						.requestMatchers("/", "/home", "/login").permitAll().requestMatchers("/admin/**")
-						.hasRole("ADMIN").requestMatchers("/responsable/**").hasRole("RESPONSABLE")
+				authorize -> authorize
+						// 1. Recursos estáticos y páginas públicas (Landing y Login)
+						.requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+						.requestMatchers("/", "/login", "/error").permitAll()
+						
+						// 2. Panel de control (Dashboard) requiere estar logueado
+						.requestMatchers("/home").authenticated()   // <--- /home ESTÁ PROTEGIDO
+						
+						// 3. Rutas de ADMIN
+						.requestMatchers("/admin/**").hasRole("ADMIN")
+						.requestMatchers("/reportes/**").hasRole("ADMIN")
+						
+						// 4. Rutas de RESPONSABLE
+						.requestMatchers("/responsable/**").hasRole("RESPONSABLE")
+						
+						// 5. Rutas de EMPLEADO y mixtas
 						.requestMatchers("/empleados/mi-sueldo", "/empleados/descargar-sueldo").hasRole("EMPLEADO")
 						.requestMatchers("/empleados/nuevo").hasAnyRole("RESPONSABLE", "ADMIN")
-						.requestMatchers("/pedidos/**").hasRole("EMPLEADO").anyRequest().authenticated())
+						.requestMatchers("/pedidos/**").hasRole("EMPLEADO")
+						
+						// 6. Cualquier otra ruta
+						.anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.defaultSuccessUrl("/home", true).failureUrl("/login?error=true").permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout=true")
@@ -39,3 +55,4 @@ public class SecurityConfig {
 		return http.build();
 	}
 }
+

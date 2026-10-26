@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Plato Estrella</title>
+    <style>
+        :root {
+            --bg-principal: #f4f6f9; --bg-tarjeta: #ffffff; --texto-principal: #333333;
+            --texto-secundario: #666666; --borde: #cccccc; --primario: #007bff;
+            --exito: #28a745; --danger: #dc3545;
+        }
+        [data-theme="dark"] {
+            --bg-principal: #121212; --bg-tarjeta: #1e1e1e; --texto-principal: #e0e0e0;
+            --texto-secundario: #a0a0a0; --borde: #444444; --primario: #3792ff;
+            --exito: #2ea44f; --danger: #ff6b7b;
+        }
+        body { font-family: Arial, sans-serif; background-color: var(--bg-principal); color: var(--texto-principal); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background-color: var(--bg-tarjeta); padding: 30px; border-radius: 8px; border: 1px solid var(--borde); width: 100%; max-width: 600px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primario); padding-bottom: 10px; margin-bottom: 20px; }
+        .card { background-color: var(--bg-principal); padding: 20px; border-radius: 8px; border: 1px solid var(--borde); text-align: center; }
+        .plato-nombre { font-size: 24px; font-weight: bold; color: var(--primario); margin-bottom: 10px; }
+        .plato-stats { font-size: 18px; margin: 10px 0; }
+        .destacado { color: var(--exito); font-weight: bold; font-size: 22px; }
+        .btn-volver { display: block; text-align: center; margin-top: 20px; color: var(--texto-principal); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <main class="container" role="main" aria-labelledby="titulo-plato">
+        <header class="header">
+            <h1 id="titulo-plato">Plato Estrella</h1>
+            <button id="theme-toggle" style="background:none;border:none;cursor:pointer;font-size:18px;" aria-label="Cambiar modo oscuro">🌓 Modo</button>
+        </header>
+
+        <p style="text-align: center; margin-bottom: 20px;">
+            Unidad: <strong th:text="${unidad.nombreComercial}">Nombre Unidad</strong>
+        </p>
+
+        <div th:if="${plato != null}" class="card">
+            <div class="plato-nombre" th:text="${plato.nombrePlato}">Hamburguesa Triple</div>
+            <div class="plato-stats">
+                ¡Se vendieron <span class="destacado" th:text="${plato.cantidadTotalPedida}">0</span> unidades!
+            </div>
+            <div class="plato-stats">
+                Precio de venta: $<span th:text="${#numbers.formatDecimal(plato.precioVenta, 1, 2)}">0.00</span>
+            </div>
+        </div>
+
+        <div th:if="${plato == null}" class="card" style="border-left: 4px solid var(--danger);">
+            <p>Aún no hay pedidos registrados para esta unidad. ¡El plato estrella se revelará cuando se vendan platos!</p>
+        </div>
+
+        <a th:href="@{/home}" class="btn-volver">Volver al Panel</a>
+    </main>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = (theme === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>
