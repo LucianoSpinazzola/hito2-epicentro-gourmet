@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Unidad y Responsable</title>
+    <style>
+        body { font-family: Arial; background: #f4f6f9; padding: 20px; display: flex; justify-content: center; }
+        .form-container { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 700px; border: 1px solid #ccc; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; }
+        .alert { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+        h2 { border-bottom: 2px solid #007bff; padding-bottom: 10px; color: #007bff; margin-top: 30px;}
+        h3 { margin-top: 20px; color: #555; }
+        .fila { display: flex; gap: 10px; }
+        .fila > div { flex: 1; }
+    </style>
+</head>
+<body>
+    <main class="form-container">
+        <h1 style="text-align: center;">Registrar Unidad de Venta</h1>
+        
+        <div th:if="${mensajeError}" class="alert" th:text="${mensajeError}"></div>
+
+        <form th:action="@{/admin/unidades/nuevo}" th:object="${registroForm}" method="post">
+            
+            <h2>1. Datos de la Unidad</h2>
+            <div class="fila">
+                <div class="form-group">
+                    <label>Nombre Comercial</label>
+                    <input type="text" th:field="*{nombreComercial}" required />
+                </div>
+                <div class="form-group">
+                    <label>Código Único (10 caracteres)</label>
+                    <input type="text" th:field="*{codigo}" maxlength="10" required />
+                </div>
+            </div>
+            <div class="fila">
+                <div class="form-group">
+                    <label>Superficie (m²)</label>
+                    <input type="number" step="0.01" th:field="*{superficie}" required />
+                </div>
+                <div class="form-group">
+                    <label>Festival Perteneciente</label>
+                    <select th:field="*{idFestival}" required>
+                        <option value="">-- Seleccione --</option>
+                        <option th:each="f : ${festivales}" th:value="${f.idFestival}" th:text="${f.nombre}"></option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Tipo de Unidad</label>
+                <select th:field="*{tipoUnidad}" id="tipoUnidad" onchange="cambiarTipo()" required>
+                    <option value="FOOD_TRUCK">Food Truck</option>
+                    <option value="PUESTO_DESARMABLE">Puesto Desarmable</option>
+                </select>
+            </div>
+
+            <!-- Bloque FoodTruck -->
+            <div id="bloqueFT">
+                <div class="fila">
+                    <div class="form-group">
+                        <label>Patente</label>
+                        <input type="text" th:field="*{patente}" />
+                    </div>
+                    <div class="form-group" style="display:flex; align-items:center; margin-top:20px;">
+                        <input type="checkbox" th:field="*{requiereConexionElectrica}" style="width:20px; margin-right:10px;" />
+                        <label>¿Requiere conexión eléctrica?</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque Puesto -->
+            <div id="bloquePD" style="display:none;">
+                <div class="fila">
+                    <div class="form-group">
+                        <label>Cantidad de Carpas</label>
+                        <input type="number" th:field="*{cantidadCarpas}" />
+                    </div>
+                    <div class="form-group">
+                        <label>Tiempo de Montaje (minutos)</label>
+                        <input type="number" th:field="*{tiempoMontaje}" />
+                    </div>
+                </div>
+            </div>
+
+            <h2>2. Datos del Responsable (Creará su Usuario)</h2>
+            <div class="fila">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" th:field="*{nombreResponsable}" required />
+                </div>
+                <div class="form-group">
+                    <label>Apellido</label>
+                    <input type="text" th:field="*{apellidoResponsable}" required />
+                </div>
+                <div class="form-group">
+                    <label>DNI</label>
+                    <input type="number" th:field="*{dniResponsable}" required />
+                </div>
+            </div>
+            <div class="fila">
+                <div class="form-group">
+                    <label>Email (Será su Usuario)</label>
+                    <input type="email" th:field="*{emailResponsable}" required />
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" th:field="*{passwordResponsable}" required />
+                </div>
+            </div>
+
+            <button type="submit" class="btn">Registrar Unidad y Responsable</button>
+        </form>
+        <a th:href="@{/home}" style="display:block; text-align:center; margin-top:15px; color:#555;">Volver al Panel</a>
+    </main>
+
+    <script>
+        function cambiarTipo() {
+            var tipo = document.getElementById("tipoUnidad").value;
+            document.getElementById("bloqueFT").style.display = (tipo === "FOOD_TRUCK") ? "block" : "none";
+            document.getElementById("bloquePD").style.display = (tipo === "PUESTO_DESARMABLE") ? "block" : "none";
+        }
+        cambiarTipo();
+    </script>
+</body>
+</html>
