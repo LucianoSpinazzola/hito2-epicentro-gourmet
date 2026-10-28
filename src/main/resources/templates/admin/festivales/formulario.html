@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Festival</title>
+    <style>
+        body { font-family: Arial; background: #f4f6f9; padding: 20px; display: flex; justify-content: center; }
+        .form-container { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 500px; border: 1px solid #ccc; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <main class="form-container">
+        <h1>Crear Nuevo Festival</h1>
+        <form th:action="@{/admin/festivales/nuevo}" th:object="${festival}" method="post">
+            <div class="form-group">
+                <label>Nombre del Festival</label>
+                <input type="text" th:field="*{nombre}" required />
+            </div>
+            <div class="form-group">
+                <label>Temporada</label>
+                <input type="text" th:field="*{temporada}" required />
+            </div>
+            <div class="form-group">
+                <label>Fecha de Inicio</label>
+                <input type="date" th:field="*{fechaDeInicio}" required />
+            </div>
+            <div class="form-group">
+                <label>Fecha de Fin</label>
+                <input type="date" th:field="*{fechaDeFin}" required />
+            </div>
+            <button type="submit" class="btn">Guardar Festival</button>
+        </form>
+        <a th:href="@{/home}" style="display:block; text-align:center; margin-top:15px;">Volver</a>
+    </main>
+</body>
+</html>

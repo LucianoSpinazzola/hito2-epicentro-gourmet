@@ -205,13 +205,16 @@
 			    <a th:href="@{/pedidos/cierre-caja}" class="btn-link" style="background-color:#ffc107; color:#333;" aria-label="Ir al cierre de caja de mi unidad">Cerrar Caja</a>
 			</section>
 
-            <section class="card" aria-labelledby="title-reportes" sec:authorize="hasRole('ADMIN')">
-                <h2 id="title-reportes"><span aria-hidden="true">📈</span> Reportes Gerenciales</h2>
-                <p>Visualización paramétrica de cánones, cálculo de rentabilidad neta consolidada y plato estrella por
-                    festival.</p>
-                <a th:href="@{/reportes}" class="btn-link"
-                   aria-label="Ingresar al panel de control gerencial corporativo">Ingresar Reportes</a>
-            </section>
+			<section class="card" aria-labelledby="title-reportes" sec:authorize="hasRole('ADMIN')">
+			    <h2 id="title-reportes"><span aria-hidden="true">📈</span> Reportes Gerenciales</h2>
+			    <p>Visualización paramétrica de cánones, cálculo de rentabilidad neta consolidada y plato estrella por festival.</p>
+			    
+			    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+			        <a th:href="@{/reportes}" class="btn-link" aria-label="Ingresar al panel de control gerencial corporativo">Ingresar Reportes</a>
+			        <a th:href="@{/admin/festivales/nuevo}" class="btn-link" style="background-color: #6f42c1;" aria-label="Crear un nuevo festival">Crear Festival</a>
+			   		<a th:href="@{/admin/unidades/nuevo}" class="btn-link" style="background-color: #17a2b8;" aria-label="Registrar nueva unidad">Nueva Unidad</a>
+				 </div>
+			</section>
 
             <            <section class="card" aria-labelledby="title-responsable" sec:authorize="hasRole('RESPONSABLE')">
 			    <h2 id="title-responsable"><span aria-hidden="true">🧑‍🍳</span> Gestión de mi Unidad</h2>
