@@ -49,7 +49,7 @@ https://drive.google.com/file/d/1D7XGryUYuFaSg-SwSJwtA2BEwlU4-QyE/view?usp=shari
 5. Ejecutar la aplicación:
 Desde el IDE (STS) mediante Run As > Spring Boot App, o vía terminal con:
 mvn spring-boot:run
-La aplicación estará disponible en http://localhost:8089
+La aplicación estará disponible en http://localhost:8080
 
 ### Accesibilidad
 
