@@ -2,6 +2,7 @@ package com.epicentrogourmet.hito2.controllers;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -366,7 +368,6 @@ public class EmpleadoController {
 			return "empleados/formulario";
 		}
 
-		// Todas las validaciones pasaron: recién acá se crea el usuario y el empleado.
 		String claveAleatoria = generarClaveAleatoria();
 
 		Usuario usuario = new Usuario();
@@ -406,12 +407,84 @@ public class EmpleadoController {
 			empleadoRepository.save(cocinero);
 		}
 
-		// Envio de credenciales al empleado recien creado, a su correo electronico.
 		mailService.enviarCredenciales(username, username, claveAleatoria, unidadOpt.get().getNombreComercial());
 
 		model.addAttribute("mensajeExito", "Empleado dado de alta correctamente. Usuario: " + username);
 		model.addAttribute("empleadoForm", new EmpleadoFormDTO());
 		return "empleados/formulario";
+	}
+
+	// ---------- LISTA, BAJA LOGICA Y REACTIVACION ----------
+
+	@GetMapping("/lista")
+	public String listarEmpleados(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+		Optional<Usuario> usuarioOpt = usuarioRepository.findByUserName(userDetails.getUsername());
+		if (usuarioOpt.isEmpty()) {
+			model.addAttribute("mensajeError", "No se encontró el usuario autenticado.");
+			return "index";
+		}
+		Usuario usuarioLogueado = usuarioOpt.get();
+
+		Optional<com.epicentrogourmet.hito2.entity.Empleado> empleadoOpt = empleadoRepository
+				.findByUsuario_IdUsuario(usuarioLogueado.getIdUsuario());
+		if (empleadoOpt.isEmpty() || empleadoOpt.get().getUnidadAsignada() == null) {
+			model.addAttribute("mensajeError", "Tu usuario no tiene una unidad asignada.");
+			return "index";
+		}
+
+		Long idUnidad = empleadoOpt.get().getUnidadAsignada().getIdUnidadDeVenta();
+
+		List<com.epicentrogourmet.hito2.entity.Empleado> activos = empleadoRepository
+				.findByUnidadAsignada_IdUnidadDeVentaAndEliminadoFalse(idUnidad);
+		List<com.epicentrogourmet.hito2.entity.Empleado> eliminados = empleadoRepository
+				.findByUnidadAsignada_IdUnidadDeVenta(idUnidad).stream().filter(e -> e.isEliminado()).toList();
+
+		model.addAttribute("titulo", "Empleados de mi unidad");
+		model.addAttribute("activos", activos);
+		model.addAttribute("eliminados", eliminados);
+		model.addAttribute("unidad", empleadoOpt.get().getUnidadAsignada().getNombreComercial());
+
+		return "empleados/lista";
+	}
+
+	@PostMapping("/baja/{id}")
+	@Transactional
+	public String darDeBaja(@PathVariable Long id, Model model) {
+		Optional<com.epicentrogourmet.hito2.entity.Empleado> empleadoOpt = empleadoRepository.findById(id);
+		if (empleadoOpt.isEmpty()) {
+			model.addAttribute("mensajeError", "El empleado no existe.");
+			return "redirect:/empleados/lista";
+		}
+
+		com.epicentrogourmet.hito2.entity.Empleado emp = empleadoOpt.get();
+		emp.setEliminado(true);
+		if (emp.getUsuario() != null) {
+			emp.getUsuario().setActivo(false);
+			usuarioRepository.save(emp.getUsuario());
+		}
+		empleadoRepository.save(emp);
+
+		return "redirect:/empleados/lista?bajaExito=true";
+	}
+
+	@PostMapping("/reactivar/{id}")
+	@Transactional
+	public String reactivar(@PathVariable Long id, Model model) {
+		Optional<com.epicentrogourmet.hito2.entity.Empleado> empleadoOpt = empleadoRepository.findById(id);
+		if (empleadoOpt.isEmpty()) {
+			model.addAttribute("mensajeError", "El empleado no existe.");
+			return "redirect:/empleados/lista";
+		}
+
+		com.epicentrogourmet.hito2.entity.Empleado emp = empleadoOpt.get();
+		emp.setEliminado(false);
+		if (emp.getUsuario() != null) {
+			emp.getUsuario().setActivo(true);
+			usuarioRepository.save(emp.getUsuario());
+		}
+		empleadoRepository.save(emp);
+
+		return "redirect:/empleados/lista?reactivacionExito=true";
 	}
 
 	private String generarClaveAleatoria() {

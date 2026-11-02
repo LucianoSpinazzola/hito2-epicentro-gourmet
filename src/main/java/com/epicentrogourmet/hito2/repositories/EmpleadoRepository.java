@@ -16,4 +16,8 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
 	Optional<Empleado> findByUsuario_IdUsuario(Long idUsuario);
 
 	Optional<Empleado> findByDni(Integer dni);
+
+	List<Empleado> findByUnidadAsignada_IdUnidadDeVentaAndEliminadoFalse(Long idUnidadDeVenta);
+
+	List<Empleado> findByUnidadAsignada_IdUnidadDeVenta(Long idUnidadDeVenta);
 }

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Empleados de mi unidad</title>
+    <style>
+        :root {
+            --bg-principal: #f4f6f9;
+            --bg-tarjeta: #ffffff;
+            --texto-principal: #333333;
+            --texto-secundario: #666666;
+            --borde: #cccccc;
+            --primario: #007bff;
+            --primario-hover: #0056b3;
+            --danger: #dc3545;
+            --exito: #28a745;
+        }
+
+        [data-theme="dark"] {
+            --bg-principal: #121212;
+            --bg-tarjeta: #1e1e1e;
+            --texto-principal: #e0e0e0;
+            --texto-secundario: #a0a0a0;
+            --borde: #444444;
+            --primario: #3792ff;
+            --primario-hover: #1e70d6;
+            --danger: #ff6b7b;
+            --exito: #2ea44f;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .contenedor {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--bg-tarjeta);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--borde);
+        }
+
+        h1 { margin-top: 0; }
+        h2 { border-bottom: 2px solid var(--primario); padding-bottom: 6px; color: var(--primario); margin-top: 30px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; border-bottom: 1px solid var(--borde); text-align: left; }
+        th { background-color: var(--bg-principal); }
+
+        .btn-accion {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+        }
+
+        .btn-baja { background-color: var(--danger); }
+        .btn-reactivar { background-color: var(--exito); }
+
+        .alert {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .alert-success { background-color: #d4edda; color: #155724; }
+        [data-theme="dark"] .alert-success { background-color: #0f2d19; color: #b4f8c6; }
+
+        .btn-accion:focus-visible,
+        a:focus-visible,
+        #theme-toggle:focus-visible {
+            outline: 3px solid var(--primario);
+            outline-offset: 2px;
+        }
+
+        .volver {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--texto-principal);
+        }
+    </style>
+</head>
+<body>
+    <main class="contenedor" role="main" aria-labelledby="titulo-lista">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h1 id="titulo-lista" th:text="${titulo}">Empleados de mi unidad</h1>
+            <button id="theme-toggle" style="background:none; border:none; cursor:pointer; font-size:18px;"
+                    aria-label="Cambiar entre modo claro y modo oscuro">
+                <span aria-hidden="true">🌓</span> Modo
+            </button>
+        </div>
+
+        <p>Unidad: <strong th:text="${unidad}">Unidad</strong></p>
+
+        <div th:if="${param.bajaExito}" class="alert alert-success" role="alert">
+            Empleado dado de baja correctamente.
+        </div>
+        <div th:if="${param.reactivacionExito}" class="alert alert-success" role="alert">
+            Empleado reactivado correctamente.
+        </div>
+
+        <h2>Empleados activos</h2>
+        <table>
+            <caption class="sr-only" style="position:absolute; left:-9999px;">Empleados activos de la unidad</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">DNI</th>
+                    <th scope="col">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="e : ${activos}">
+                    <td th:text="${e.nombre}">Nombre</td>
+                    <td th:text="${e.apellido}">Apellido</td>
+                    <td th:text="${e.dni}">DNI</td>
+                    <td>
+                        <form th:action="@{'/empleados/baja/' + ${e.idEmpleado}}" method="post" style="display:inline;">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" class="btn-accion btn-baja"
+                                    th:attr="aria-label='Dar de baja a ' + ${e.nombre} + ' ' + ${e.apellido}">
+                                Dar de baja
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(activos)}">
+                    <td colspan="4">No hay empleados activos en esta unidad.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Empleados eliminados (baja lógica)</h2>
+        <table>
+            <caption class="sr-only" style="position:absolute; left:-9999px;">Empleados eliminados de la unidad</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">DNI</th>
+                    <th scope="col">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="e : ${eliminados}">
+                    <td th:text="${e.nombre}">Nombre</td>
+                    <td th:text="${e.apellido}">Apellido</td>
+                    <td th:text="${e.dni}">DNI</td>
+                    <td>
+                        <form th:action="@{'/empleados/reactivar/' + ${e.idEmpleado}}" method="post" style="display:inline;">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" class="btn-accion btn-reactivar"
+                                    th:attr="aria-label='Reactivar a ' + ${e.nombre} + ' ' + ${e.apellido}">
+                                Reactivar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(eliminados)}">
+                    <td colspan="4">No hay empleados eliminados en esta unidad.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a th:href="@{/home}" class="volver" aria-label="Volver al panel de control">Volver al Panel</a>
+    </main>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.setAttribute('aria-label', 'Cambiar tema. Tema actual: ' + (currentTheme === 'dark' ? 'oscuro' : 'claro'));
+
+        themeToggle.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = (theme === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.setAttribute('aria-label', 'Cambiar tema. Tema actual: ' + (newTheme === 'dark' ? 'oscuro' : 'claro'));
+        });
+    </script>
+</body>
+</html>
