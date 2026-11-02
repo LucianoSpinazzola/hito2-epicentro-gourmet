@@ -58,10 +58,11 @@ La interfaz está desarrollada con criterios de accesibilidad para personas con 
 * Regiones semánticas: el lector anuncia "región principal", "navegación" y "encabezado nivel 1" al recorrer la página, y permite saltar entre regiones con teclas rápidas (por ejemplo, D para región principal en NVDA).
 * Etiquetas vinculadas: al enfocar un campo, el lector anuncia "Correo Electrónico, edición requerida" o "Contraseña, edición de contraseña requerida", en lugar de un campo sin nombre.
 * Campos obligatorios: el lector agrega "requerido" al anunciar el campo, gracias a required y aria-required.
-* Mensajes con role="alert": al aparecer, el lector anuncia de inmediato "alerta: Credenciales inválidas o usuario inactivo", "alerta: Ha cerrado sesión correctamente" o "alerta: Cierre de caja registrado correctamente", sin que el usuario tenga que buscarlos.
+* Mensajes con role="alert": al aparecer, el lector anuncia de inmediato "alerta: Credenciales inválidas o usuario inactivo", "alerta: Ha cerrado sesión correctamente", "alerta: Empleado dado de baja correctamente" o "alerta: Empleado reactivado correctamente", sin que el usuario tenga que buscarlos.
 * aria-describedby: al entrar al formulario con un error, el lector lee también el mensaje de error asociado.
 * Fechas como tres cuadros combinados: en el alta de empleado, NVDA anuncia "Fecha de nacimiento, grupo" y cada select como "cuadro combinado", en lugar de un input date que se lee como "botón giratorio".
-* Tablas accesibles: el ranking por recaudación, las unidades con mayor canon y el historial de cierres tienen encabezados en la primera fila (th), y NVDA las lee como "tabla con X filas y Y columnas", anunciando columna y valor en cada celda.
+* Tablas accesibles: el ranking por recaudación, las unidades con mayor canon, el historial de cierres y la lista de empleados tienen encabezados en la primera fila (th), y NVDA las lee como "tabla con X filas y Y columnas", anunciando columna y valor en cada celda.
+* Botones con aria-label: en la lista de empleados, los botones de baja y reactivación se anuncian como "Dar de baja a [nombre] [apellido]" y "Reactivar a [nombre] [apellido]".
 * Navegación de reportes: la barra de reportes tiene role="navigation" y aria-label, así el lector anuncia "Barra de navegación de reportes, navegación".
 * Foco visible: al navegar con Tab, el lector anuncia el elemento enfocado ("botón, Cerrar sesión segura del sistema") y el foco se ve con un contorno de alto contraste.
 * Modo oscuro: el botón anuncia "Cambiar tema. Tema actual: oscuro" y actualiza el anuncio al cambiar, para que el usuario sepa el estado sin depender del color.
@@ -100,6 +101,8 @@ https://drive.google.com/file/d/186UyoMGrEUDujmmbJauR2BH1_pfwHJim/view?usp=shari
 | --- | --- | --- |
 | Login seguro con roles (BCrypt, CSRF, rutas protegidas) | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/6 |
 | Alta de Empleado (formulario accesible, validaciones, Cajero/Cocinero, envío de credenciales por mail) | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/7 y https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/11 |
+| Baja lógica y reactivación de empleados | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/15 |
+| Accesibilidad del formulario de unidad y responsable | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/14 |
 | Reportes de Administrador (Ranking y Mayor Canon) | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/9 |
 | Filtro por unidad de venta y Cierre de Caja | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/8 |
 | Landing pública de festivales, CRUD de festivales, alta de platos y plato estrella | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/12 |
