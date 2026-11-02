@@ -61,8 +61,6 @@
             margin-bottom: 20px;
         }
 
-        /* Lista de definiciones para los datos del empleado: NVDA la recorre como
-           "lista de definiciones" y anuncia término y definición de cada par. */
         dl.info-list {
             margin: 0 0 20px 0;
         }
@@ -120,7 +118,21 @@
             font-size: 14px;
         }
 
-        /* Foco visible para navegación por teclado en botones y enlaces */
+        /* Mensaje de estado de la descarga, anunciado por NVDA al iniciarse. */
+        .aviso-descarga {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: var(--bg-principal);
+            border: 1px solid var(--borde);
+            font-size: 14px;
+            display: none;
+        }
+
+        .aviso-descarga.visible {
+            display: block;
+        }
+
         .btn-pdf:focus-visible,
         .btn-volver:focus-visible,
         #theme-toggle:focus-visible {
@@ -131,21 +143,16 @@
 </head>
 <body>
 
-    <!-- main: región principal. NVDA la anuncia como "región principal". -->
     <main class="recibo-container" role="main" aria-labelledby="recibo-title">
 
         <header class="header-recibo">
-            <!-- h1 único: NVDA lo anuncia como "encabezado nivel 1". -->
             <h1 id="recibo-title" th:text="${titulo}">Recibo de Haberes</h1>
-            <!-- Botón de tema con aria-label actualizado por el script al cambiar. -->
             <button id="theme-toggle" style="background: none; border: none; cursor: pointer; font-size: 18px;"
                     aria-label="Cambiar entre modo claro y modo oscuro">
                 <span aria-hidden="true">🌓</span> Modo
             </button>
         </header>
 
-        <!-- Datos del empleado como lista de definiciones.
-             NVDA anuncia "lista de definiciones" y lee término y definición de cada par. -->
         <dl class="info-list">
             <dt class="info-label">ID Empleado</dt>
             <dd class="info-value" th:text="${empleado.idEmpleado}">0</dd>
@@ -157,22 +164,22 @@
             <dd class="info-value" th:text="${rolUsuario}">Rol</dd>
         </dl>
 
-        <!-- Panel del sueldo neto. aria-live="polite" hace que NVDA anuncie el monto
-             cuando la vista termina de renderizar. -->
         <div class="monto-panel" role="status" aria-live="polite">
             <span>SUELDO NETO A COBRAR:</span>
             <span style="color: var(--exito);" th:text="'$' + ${#numbers.formatDecimal(sueldoCalculado, 1, 2)}">$0.00</span>
         </div>
 
-        <!-- Enlace al PDF con aria-label explícito para que NVDA anuncie el destino. -->
-        <a th:href="@{/empleados/descargar-sueldo}" class="btn-pdf"
-           aria-label="Descargar recibo oficial de haberes en PDF">Descargar Recibo Oficial en PDF</a>
+        <a id="enlace-descarga" th:href="@{/empleados/descargar-sueldo}" class="btn-pdf"
+           aria-label="Descargar recibo oficial de haberes en PDF. Se iniciará la descarga y podés revisarla en tu carpeta de descargas">Descargar Recibo Oficial en PDF</a>
+
+        <div id="aviso-descarga" class="aviso-descarga" role="status" aria-live="polite">
+            Descarga del recibo iniciada. Revisá tu carpeta de descargas.
+        </div>
 
         <a th:href="@{/home}" class="btn-volver" aria-label="Volver al panel de control">Volver al Panel</a>
 
     </main>
 
-    <!-- Script del modo oscuro con aria-label sincronizado, igual que en login e index. -->
     <script>
         const themeToggle = document.getElementById('theme-toggle');
         const currentTheme = localStorage.getItem('theme') || 'light';
@@ -188,6 +195,14 @@
             localStorage.setItem('theme', newTheme);
             themeToggle.setAttribute('aria-label', 'Cambiar tema. Tema actual: ' + (newTheme === 'dark' ? 'oscuro' : 'claro'));
         });
+
+        const enlaceDescarga = document.getElementById('enlace-descarga');
+        const avisoDescarga = document.getElementById('aviso-descarga');
+
+        enlaceDescarga.addEventListener('click', () => {
+            avisoDescarga.classList.add('visible');
+        });
     </script>
 </body>
 </html>
+
