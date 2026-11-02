@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<!DOCTYPE html>
 
 <head>
 	<meta charset="UTF-8">
@@ -229,6 +229,9 @@
 				<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
 					<a th:href="@{/empleados/nuevo}" class="btn-link"
 						aria-label="Ir al formulario para dar de alta un nuevo empleado">Alta de Empleado</a>
+
+					<a th:href="@{/empleados/lista}" class="btn-link" style="background-color: #6c757d;"
+						aria-label="Ver y gestionar los empleados de mi unidad">Gestionar Empleados</a>
 
 					<a th:href="@{/responsable/plato-estrella}" class="btn-link" style="background-color: #17a2b8;"
 						aria-label="Ver el plato más vendido de mi unidad">Plato Estrella</a>
