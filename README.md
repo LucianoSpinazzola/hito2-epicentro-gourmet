@@ -8,8 +8,6 @@ Trabajo Práctico Grupal 2026 - OO2 - UNLa
 
 * Luciano Nicolás Spinazzola - [LucianoSpinazzola](https://github.com/LucianoSpinazzola)
 * Vazquez, Pablo - [pablo-vaz1](https://github.com/pablo-vaz1)
-* Apellido, Nombre - [COMPLETAR USUARIO GITHUB]
-* Apellido, Nombre - [COMPLETAR USUARIO GITHUB]
 
 ### Descripción
 
@@ -61,9 +59,10 @@ La interfaz está desarrollada con criterios de accesibilidad para personas con 
 * Mensajes con role="alert": al aparecer, el lector anuncia de inmediato "alerta: Credenciales inválidas o usuario inactivo", "alerta: Ha cerrado sesión correctamente", "alerta: Empleado dado de baja correctamente" o "alerta: Empleado reactivado correctamente", sin que el usuario tenga que buscarlos.
 * aria-describedby: al entrar al formulario con un error, el lector lee también el mensaje de error asociado.
 * Fechas como tres cuadros combinados: en el alta de empleado, NVDA anuncia "Fecha de nacimiento, grupo" y cada select como "cuadro combinado", en lugar de un input date que se lee como "botón giratorio".
-* Tablas accesibles: el ranking por recaudación, las unidades con mayor canon, el historial de cierres y la lista de empleados tienen encabezados en la primera fila (th), y NVDA las lee como "tabla con X filas y Y columnas", anunciando columna y valor en cada celda.
-* Botones con aria-label: en la lista de empleados, los botones de baja y reactivación se anuncian como "Dar de baja a [nombre] [apellido]" y "Reactivar a [nombre] [apellido]".
+* Tablas accesibles: el ranking por recaudación, las unidades con mayor canon, las unidades del festival, el historial de cierres y la lista de empleados tienen encabezados en la primera fila (th scope="col"), y NVDA las lee como "tabla con X filas y Y columnas", anunciando columna y valor en cada celda.
+* Botones con aria-label: en la lista de empleados, los botones de baja y reactivación se anuncian como "Dar de baja a [nombre] [apellido]" y "Reactivar a [nombre] [apellido]". En el cierre de caja, el botón de confirmar se anuncia como "Confirmar cierre de caja de la unidad".
 * Descarga del recibo: el enlace de descarga del PDF anuncia "Descargar recibo oficial de haberes en PDF. Se iniciará la descarga y podés revisarla en tu carpeta de descargas", y al hacer clic se muestra un aviso con role="status". Así el usuario sabe que la descarga se inició sin depender del historial del navegador.
+* Landing pública: el botón de tema y el enlace de login tienen aria-label, las tarjetas de festivales están asociadas a su encabezado con aria-labelledby, y el mensaje de lista vacía tiene role="status".
 * Navegación de reportes: la barra de reportes tiene role="navigation" y aria-label, así el lector anuncia "Barra de navegación de reportes, navegación".
 * Foco visible: al navegar con Tab, el lector anuncia el elemento enfocado ("botón, Cerrar sesión segura del sistema") y el foco se ve con un contorno de alto contraste.
 * Modo oscuro: el botón anuncia "Cambiar tema. Tema actual: oscuro" y actualiza el anuncio al cambiar, para que el usuario sepa el estado sin depender del color.
@@ -105,7 +104,10 @@ https://drive.google.com/file/d/186UyoMGrEUDujmmbJauR2BH1_pfwHJim/view?usp=shari
 | Baja lógica y reactivación de empleados | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/15 |
 | Accesibilidad del formulario de unidad y responsable | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/14 |
 | Accesibilidad del recibo y aviso de descarga del PDF | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/16 |
+| Accesibilidad de la landing pública | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/18 |
+| Accesibilidad del formulario de festival, cierre de caja y plato estrella | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/19 |
 | Reportes de Administrador (Ranking y Mayor Canon) | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/9 |
+| Sección de unidades de venta del festival en reportes | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/17 |
 | Filtro por unidad de venta y Cierre de Caja | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/8 |
 | Landing pública de festivales, CRUD de festivales, alta de platos y plato estrella | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/12 |
 | Entidades con herencia, repositorios, servicios e implementaciones | Pablo Vazquez | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/3 |
@@ -113,6 +115,5 @@ https://drive.google.com/file/d/186UyoMGrEUDujmmbJauR2BH1_pfwHJim/view?usp=shari
 | Configuración de properties y entidades sin herencia | Luciano Spinazzola | https://github.com/LucianoSpinazzola/hito2-epicentro-gourmet/pull/4 |
 
 ### Metodología de Trabajo
-
 
 Cada caso de uso se desarrolla en una rama independiente siguiendo el formato CUFuncionalidadResponsable (por ejemplo, CUAltaEmpleadoJuanPerez) y se integra a main mediante Pull Request, incluyendo en la descripción los detalles técnicos de la solución y en este README el enlace correspondiente al PR.
