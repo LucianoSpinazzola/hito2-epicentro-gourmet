@@ -1,40 +1,145 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Nuevo Festival</title>
-    <style>
-        body { font-family: Arial; background: #f4f6f9; padding: 20px; display: flex; justify-content: center; }
-        .form-container { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 500px; border: 1px solid #ccc; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Nuevo Festival</title>
+	<style>
+		:root {
+			--bg-principal: #f4f6f9;
+			--bg-tarjeta: #ffffff;
+			--texto-principal: #333333;
+			--borde: #cccccc;
+			--primario: #007bff;
+			--primario-hover: #0056b3;
+		}
+
+		[data-theme="dark"] {
+			--bg-principal: #121212;
+			--bg-tarjeta: #1e1e1e;
+			--texto-principal: #e0e0e0;
+			--borde: #444444;
+			--primario: #3792ff;
+			--primario-hover: #1e70d6;
+		}
+
+		body {
+			font-family: Arial, sans-serif;
+			background-color: var(--bg-principal);
+			color: var(--texto-principal);
+			padding: 20px;
+			display: flex;
+			justify-content: center;
+			transition: background-color 0.3s, color 0.3s;
+		}
+
+		.form-container {
+			background-color: var(--bg-tarjeta);
+			padding: 30px;
+			border-radius: 8px;
+			width: 100%;
+			max-width: 500px;
+			border: 1px solid var(--borde);
+		}
+
+		.form-group {
+			margin-bottom: 15px;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: bold;
+		}
+
+		input {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid var(--borde);
+			border-radius: 4px;
+			box-sizing: border-box;
+			background-color: var(--bg-tarjeta);
+			color: var(--texto-principal);
+		}
+
+		.btn {
+			width: 100%;
+			padding: 12px;
+			background-color: var(--primario);
+			color: white;
+			border: none;
+			border-radius: 4px;
+			font-weight: bold;
+			margin-top: 10px;
+			cursor: pointer;
+			font-size: 16px;
+		}
+
+		.btn:hover {
+			background-color: var(--primario-hover);
+		}
+
+		.btn:focus-visible,
+		input:focus-visible,
+		a:focus-visible,
+		#theme-toggle:focus-visible {
+			outline: 3px solid var(--primario);
+			outline-offset: 2px;
+		}
+	</style>
 </head>
+
 <body>
-    <main class="form-container">
-        <h1>Crear Nuevo Festival</h1>
-        <form th:action="@{/admin/festivales/nuevo}" th:object="${festival}" method="post">
-            <div class="form-group">
-                <label>Nombre del Festival</label>
-                <input type="text" th:field="*{nombre}" required />
-            </div>
-            <div class="form-group">
-                <label>Temporada</label>
-                <input type="text" th:field="*{temporada}" required />
-            </div>
-            <div class="form-group">
-                <label>Fecha de Inicio</label>
-                <input type="date" th:field="*{fechaDeInicio}" required />
-            </div>
-            <div class="form-group">
-                <label>Fecha de Fin</label>
-                <input type="date" th:field="*{fechaDeFin}" required />
-            </div>
-            <button type="submit" class="btn">Guardar Festival</button>
-        </form>
-        <a th:href="@{/home}" style="display:block; text-align:center; margin-top:15px;">Volver</a>
-    </main>
+	<main class="form-container" role="main" aria-labelledby="titulo-festival">
+		<div style="display:flex; justify-content:space-between; align-items:center;">
+			<h1 id="titulo-festival">Crear Nuevo Festival</h1>
+			<button id="theme-toggle" style="background:none; border:none; cursor:pointer; font-size:18px;"
+				aria-label="Cambiar entre modo claro y modo oscuro">
+				<span aria-hidden="true">🌓</span> Modo
+			</button>
+		</div>
+
+		<form th:action="@{/admin/festivales/nuevo}" th:object="${festival}" method="post"
+			aria-label="Formulario de creación de festival">
+
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+			<div class="form-group">
+				<label for="nombre">Nombre del Festival</label>
+				<input type="text" id="nombre" th:field="*{nombre}" required aria-required="true" />
+			</div>
+			<div class="form-group">
+				<label for="temporada">Temporada</label>
+				<input type="text" id="temporada" th:field="*{temporada}" required aria-required="true" />
+			</div>
+			<div class="form-group">
+				<label for="fechaDeInicio">Fecha de Inicio</label>
+				<input type="date" id="fechaDeInicio" th:field="*{fechaDeInicio}" required aria-required="true" />
+			</div>
+			<div class="form-group">
+				<label for="fechaDeFin">Fecha de Fin</label>
+				<input type="date" id="fechaDeFin" th:field="*{fechaDeFin}" required aria-required="true" />
+			</div>
+			<button type="submit" class="btn">Guardar Festival</button>
+		</form>
+		<a th:href="@{/home}" style="display:block; text-align:center; margin-top:15px; color:var(--texto-principal);"
+			aria-label="Volver al panel de control">Volver al Panel</a>
+	</main>
+
+	<script>
+		const themeToggle = document.getElementById('theme-toggle');
+		const currentTheme = localStorage.getItem('theme') || 'light';
+		document.documentElement.setAttribute('data-theme', currentTheme);
+		themeToggle.setAttribute('aria-label', 'Cambiar tema. Tema actual: ' + (currentTheme === 'dark' ? 'oscuro' : 'claro'));
+		themeToggle.addEventListener('click', () => {
+			let theme = document.documentElement.getAttribute('data-theme');
+			let newTheme = (theme === 'dark') ? 'light' : 'dark';
+			document.documentElement.setAttribute('data-theme', newTheme);
+			localStorage.setItem('theme', newTheme);
+			themeToggle.setAttribute('aria-label', 'Cambiar tema. Tema actual: ' + (newTheme === 'dark' ? 'oscuro' : 'claro'));
+		});
+	</script>
 </body>
+
 </html>
